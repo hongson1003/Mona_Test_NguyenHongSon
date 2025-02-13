@@ -5,3 +5,4 @@ export { default as PaymentForm } from "./PaymentForm";
 export { default as CartItemList } from "./CartItemList";
 export { default as CustomerInfo } from "./CustomerInfo";
 export { default as ProductSelect } from "./ProductSelect";
+export { default as SectionTitle } from "./SectionTitle";

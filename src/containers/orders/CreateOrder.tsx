@@ -1,4 +1,5 @@
-import { Box, Container, Typography } from "@mui/material";
+import { SectionTitle } from "@/components";
+import { Box, Container } from "@mui/material";
 import CartSummary from "./CartSummary";
 import OrderForm from "./OrderForm";
 
@@ -15,26 +16,7 @@ const CreateOrder = () => {
       }}
     >
       {/* Tiêu đề */}
-      <Typography
-        variant="h4"
-        fontWeight="bold"
-        sx={{
-          mb: 4,
-          textAlign: "center",
-          position: "relative",
-          "&::after": {
-            content: '""',
-            display: "block",
-            width: "80px",
-            height: "4px",
-            backgroundColor: "primary.main",
-            margin: "8px auto 0",
-            borderRadius: "2px",
-          },
-        }}
-      >
-        Tạo Đơn Hàng Mới
-      </Typography>
+      <SectionTitle title="Tạo Đơn Hàng Mới" />
 
       {/* Nội dung */}
       <Box

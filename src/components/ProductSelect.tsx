@@ -1,5 +1,13 @@
 import { ICartProduct } from "@/models";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Check } from "@mui/icons-material";
+import {
+  FormControl,
+  InputLabel,
+  ListItemIcon,
+  ListItemText,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import { useState } from "react";
 
 interface IProductSelectProps {
@@ -8,14 +16,18 @@ interface IProductSelectProps {
 }
 
 const ProductSelect = ({ products, onChange }: IProductSelectProps) => {
-  const [selectedProducts, setSelectedProducts] = useState<ICartProduct[]>([]);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const handleChange = (event: any) => {
-    const selectedIds = event.target.value as number[];
-    const selectedItems = products.filter((p) => selectedIds.includes(p.id));
+    const newSelectedIds = event.target.value as number[];
 
-    setSelectedProducts(selectedItems);
-    onChange(selectedItems);
+    if (
+      newSelectedIds.length !== selectedIds.length ||
+      !newSelectedIds.every((id) => selectedIds.includes(id))
+    ) {
+      setSelectedIds(newSelectedIds);
+      onChange(products.filter((p) => newSelectedIds.includes(p.id)));
+    }
   };
 
   return (
@@ -23,12 +35,27 @@ const ProductSelect = ({ products, onChange }: IProductSelectProps) => {
       <InputLabel>Chọn sản phẩm</InputLabel>
       <Select
         multiple
-        value={selectedProducts.map((p) => p.id)}
+        value={selectedIds}
         onChange={handleChange}
+        renderValue={(selected) =>
+          products
+            .filter((p) => selected.includes(p.id))
+            .map((p) => p.name)
+            .join(", ")
+        }
       >
         {products.map((product) => (
-          <MenuItem key={product.id} value={product.id}>
-            {product.name} - {product.price.toLocaleString()} VND
+          <MenuItem key={product.id} value={product.id} sx={{ py: 1 }}>
+            <ListItemIcon>
+              {selectedIds.includes(product.id) && (
+                <Check sx={{ color: "green" }} />
+              )}
+            </ListItemIcon>
+            <ListItemText
+              primary={`${
+                product.name
+              } - ${product.price.toLocaleString()} VND`}
+            />
           </MenuItem>
         ))}
       </Select>
