@@ -1,8 +1,7 @@
-import { Box, Button, Paper, Typography } from "@mui/material";
-import { useState } from "react";
+import { CustomerInfo, PaymentForm, ProductSelect } from "@/components";
+import { products } from "@/mocks";
+import { Box, Paper, Typography } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
-import CustomerInfo from "../../components/CustomerInfo";
-import PaymentForm from "../../components/PaymentForm";
 
 const OrderForm = () => {
   const methods = useForm({
@@ -15,11 +14,15 @@ const OrderForm = () => {
     },
   });
 
-  const [orderData, setOrderData] = useState(null);
+  // const [orderData, setOrderData] = useState(null);
 
-  const onSubmit = (data: any) => {
-    setOrderData(data);
-    console.log("Order Data:", data);
+  // const onSubmit = (data: any) => {
+  //   setOrderData(data);
+  //   console.log("Order Data:", data);
+  // };
+
+  const handleOnChangeProduct = (product: any) => {
+    console.log("Selected Product:", product);
   };
 
   return (
@@ -30,7 +33,13 @@ const OrderForm = () => {
           <Typography variant="h6" sx={{ mb: 2 }}>
             Thông tin khách hàng
           </Typography>
-          <CustomerInfo />
+          <CustomerInfo>
+            {/* Component ProductSelect */}
+            <ProductSelect
+              products={products}
+              onChange={handleOnChangeProduct}
+            />
+          </CustomerInfo>
         </Paper>
 
         {/* Paper cho phương thức thanh toán */}
@@ -40,15 +49,6 @@ const OrderForm = () => {
           </Typography>
           <PaymentForm />
         </Paper>
-
-        {/* Nút thanh toán */}
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={methods.handleSubmit(onSubmit)}
-        >
-          Thanh toán
-        </Button>
       </Box>
     </FormProvider>
   );

@@ -1,7 +1,11 @@
-import { TextField, Box } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 
-const CustomerInfo = () => {
+interface ICustomerInfoProps {
+  children?: React.ReactNode;
+}
+
+const CustomerInfo = ({ children }: ICustomerInfoProps) => {
   const { register } = useFormContext();
 
   return (
@@ -13,6 +17,8 @@ const CustomerInfo = () => {
       />
       <TextField label="Email" {...register("email")} fullWidth />
       <TextField label="Số điện thoại" {...register("phone")} fullWidth />
+
+      {children}
     </Box>
   );
 };

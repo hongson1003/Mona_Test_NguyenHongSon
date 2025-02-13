@@ -1,7 +1,7 @@
 import { IBaseModel } from "./base";
 import { IDiscount } from "./discount";
 
-interface ICartProduct {
+export interface ICartProduct {
   id: number;
   name: string;
   price: number;

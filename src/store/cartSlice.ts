@@ -1,21 +1,10 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { products } from "@/mocks";
+import { ICartProduct, ICartState } from "@/models/cart";
+import { IDiscount } from "@/models/discount";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface CartItem {
-  id: number;
-  name: string;
-  imageSrc: string;
-  price: number;
-  quantity: number;
-  discountCode?: string; // Mã giảm giá nếu có
-}
-
-interface CartState {
-  cart: CartItem[];
-}
-
-const initialState: CartState = {
-  cart: [],
+const initialState: ICartState = {
+  items: [],
 };
 
 const cartSlice = createSlice({
@@ -29,42 +18,49 @@ const cartSlice = createSlice({
       const product = products.find((p) => p.id === action.payload.id);
       if (!product) return;
 
-      const existingItem = state.cart.find((item) => item.id === product.id);
+      const existingItem = state.items.find(
+        (item) => item.product.id === product.id
+      );
       if (existingItem) {
         existingItem.quantity += action.payload.quantity || 1;
       } else {
-        state.cart.push({
+        const cartProduct: ICartProduct = {
           id: product.id,
           name: product.name,
-          imageSrc: product.src,
           price: product.price,
+          imageSrc: product.imageSrc,
+        };
+
+        state.items.push({
+          id: Date.now(), // ID riêng cho item trong cart, tránh trùng với product.id
+          product: cartProduct,
           quantity: action.payload.quantity || 1,
         });
       }
     },
     removeFromCart: (state, action: PayloadAction<number>) => {
-      state.cart = state.cart.filter((item) => item.id !== action.payload);
+      state.items = state.items.filter((item) => item.id !== action.payload);
     },
     updateQuantity: (
       state,
       action: PayloadAction<{ id: number; quantity: number }>
     ) => {
-      const item = state.cart.find((item) => item.id === action.payload.id);
+      const item = state.items.find((item) => item.id === action.payload.id);
       if (item) {
         item.quantity = action.payload.quantity;
       }
     },
     applyDiscount: (
       state,
-      action: PayloadAction<{ id: number; discountCode: string }>
+      action: PayloadAction<{ id: number; discount: IDiscount }>
     ) => {
-      const item = state.cart.find((item) => item.id === action.payload.id);
+      const item = state.items.find((item) => item.id === action.payload.id);
       if (item) {
-        item.discountCode = action.payload.discountCode;
+        item.discount = action.payload.discount;
       }
     },
     clearCart: (state) => {
-      state.cart = [];
+      state.items = [];
     },
   },
 });
