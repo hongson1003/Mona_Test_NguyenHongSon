@@ -1,3 +1,5 @@
-export { default as OrderForm } from "../containers/orders/OrderForm";
+export { default as CartActions } from "./CartActions";
+export { default as CartItem } from "./CartItem";
+export { default as CartTotal } from "./CartTotal";
 export { default as PaymentForm } from "./PaymentForm";
-export { default as CartSummary } from "../containers/orders/CartSummary";
+export { default as CartItemList } from "./CartItemList";

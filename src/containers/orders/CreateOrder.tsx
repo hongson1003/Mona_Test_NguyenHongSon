@@ -1,5 +1,6 @@
-import { CartSummary, OrderForm } from "@/components";
 import { Box, Container, Typography } from "@mui/material";
+import CartSummary from "./CartSummary";
+import OrderForm from "./OrderForm";
 
 const CreateOrder = () => {
   return (
