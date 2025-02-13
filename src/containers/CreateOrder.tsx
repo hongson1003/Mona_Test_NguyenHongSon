@@ -1,4 +1,5 @@
-import { Box, Container, Paper, Typography } from "@mui/material";
+import { CartSummary, OrderForm } from "@/components";
+import { Box, Container, Typography } from "@mui/material";
 
 const CreateOrder = () => {
   return (
@@ -9,31 +10,50 @@ const CreateOrder = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        minHeight: "100vh",
       }}
     >
+      {/* Tiêu đề */}
+      <Typography
+        variant="h4"
+        fontWeight="bold"
+        sx={{
+          mb: 4,
+          textAlign: "center",
+          position: "relative",
+          "&::after": {
+            content: '""',
+            display: "block",
+            width: "80px",
+            height: "4px",
+            backgroundColor: "primary.main",
+            margin: "8px auto 0",
+            borderRadius: "2px",
+          },
+        }}
+      >
+        Tạo Đơn Hàng Mới
+      </Typography>
+
+      {/* Nội dung */}
       <Box
         sx={{
           display: "flex",
-          flexDirection: { xs: "column", md: "row" }, // Mobile: dọc, Laptop: ngang
-          width: "100%",
+          flexDirection: { xs: "column", md: "row" },
           gap: 3,
+          width: "100%",
+          maxWidth: "900px",
         }}
       >
-        {/* Cột trái: Form nhập đơn hàng */}
-        <Paper sx={{ p: 3, flex: 1, minWidth: { xs: "100%", md: "400px" } }}>
-          <Typography variant="h6" gutterBottom>
-            Thông tin đơn hàng
-          </Typography>
-          OrderForm
-        </Paper>
+        {/* Form đặt hàng */}
+        <Box sx={{ flex: 1, minWidth: { xs: "100%", md: "400px" } }}>
+          <OrderForm />
+        </Box>
 
-        {/* Cột phải: Giỏ hàng & Tổng tiền */}
-        <Paper sx={{ p: 3, flex: 0.8, minWidth: { xs: "100%", md: "300px" } }}>
-          <Typography variant="h6" gutterBottom>
-            Giỏ hàng & Thanh toán
-          </Typography>
-          CartSummary
-        </Paper>
+        {/* Giỏ hàng */}
+        <Box sx={{ flex: 0.8, minWidth: { xs: "100%", md: "300px" } }}>
+          <CartSummary />
+        </Box>
       </Box>
     </Container>
   );
