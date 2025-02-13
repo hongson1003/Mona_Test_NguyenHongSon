@@ -1,5 +1,12 @@
+import { Container } from "@mui/material";
+import { CreateOrder } from "./containers";
+
 function App() {
-  return <>Hmm</>;
+  return (
+    <Container maxWidth="sm">
+      <CreateOrder />
+    </Container>
+  );
 }
 
 export default App;
