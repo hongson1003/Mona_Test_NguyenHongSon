@@ -1,8 +1,8 @@
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import CustomerInfo from "./CustomerInfo";
-import PaymentForm from "./PaymentForm";
+import CustomerInfo from "../../components/CustomerInfo";
+import PaymentForm from "../../components/PaymentForm";
 
 const OrderForm = () => {
   const methods = useForm({

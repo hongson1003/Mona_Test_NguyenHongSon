@@ -1,6 +1,6 @@
 export const discounts = [
-  { code: "SALE100", type: "fixed", value: 100000 },
-  { code: "SALE10", type: "percent", value: 10 },
-  { code: "SALE500", type: "fixed", value: 500000 },
-  { code: "SALE5", type: "percent", value: 5 },
+  { code: "SALE100K", type: "fixed", value: 100000 },
+  { code: "SALE10%", type: "percent", value: 10 },
+  { code: "SALE500K", type: "fixed", value: 500000 },
+  { code: "SALE20%", type: "percent", value: 20 },
 ];

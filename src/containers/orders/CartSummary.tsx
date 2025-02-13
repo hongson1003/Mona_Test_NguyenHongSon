@@ -1,6 +1,6 @@
 import { Box, Paper, Typography, Button } from "@mui/material";
 import { useState } from "react";
-import CartItem from "./CartItem";
+import CartItem from "../../components/CartItem";
 
 const CartSummary = () => {
   const [cartItems, setCartItems] = useState([

@@ -42,7 +42,6 @@ const CreateOrder = () => {
           flexDirection: { xs: "column", md: "row" },
           gap: 3,
           width: "100%",
-          maxWidth: "900px",
         }}
       >
         {/* Form đặt hàng */}
