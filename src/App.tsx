@@ -1,13 +1,10 @@
-import { CssBaseline, ThemeProvider } from "@mui/material";
-import { CreateOrder } from "./containers";
-import theme from "./theme";
+import { AppProvider, CreateOrder } from "./containers";
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
+    <AppProvider>
       <CreateOrder />
-    </ThemeProvider>
+    </AppProvider>
   );
 }
 
