@@ -1,11 +1,13 @@
-import { Container } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import { CreateOrder } from "./containers";
+import theme from "./theme";
 
 function App() {
   return (
-    <Container maxWidth="sm">
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <CreateOrder />
-    </Container>
+    </ThemeProvider>
   );
 }
 
