@@ -2,6 +2,7 @@ import { SectionTitle } from "@/components";
 import { ICartProduct, IOrderForm } from "@/models";
 import { RootState, setCarts } from "@/store";
 import { Box, Container } from "@mui/material";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import CartSummary from "./CartSummary";
@@ -13,7 +14,7 @@ const defaultValues: IOrderForm = {
   phone: "",
   amountReceived: 0,
   paymentMethod: "cash",
-  products: [],
+  cartItems: [],
 };
 
 const CreateOrder = () => {
@@ -22,6 +23,10 @@ const CreateOrder = () => {
   });
   const dispatch = useDispatch();
   const carts = useSelector((state: RootState) => state.cart.items);
+
+  useEffect(() => {
+    methods.setValue("cartItems", carts);
+  }, [carts]);
 
   const handleSelectProducts = (products: ICartProduct[]) => {
     const productCarts = products.map((p) => ({

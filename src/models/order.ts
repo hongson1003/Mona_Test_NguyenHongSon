@@ -1,3 +1,5 @@
+import { ICartItem } from "./cart";
+
 type PaymentMethod = "cash" | "card";
 
 export interface IOrderForm {
@@ -6,5 +8,5 @@ export interface IOrderForm {
   phone: string;
   paymentMethod: PaymentMethod;
   amountReceived: number;
-  products: number[];
+  cartItems: ICartItem[];
 }

@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { useSelector } from "react-redux";
@@ -16,9 +16,7 @@ import { useSelector } from "react-redux";
 const PaymentForm = () => {
   const { control, setValue } = useFormContext();
   const paymentMethod = useWatch({ control, name: "paymentMethod" });
-  const amountReceived = Number(
-    useWatch({ control, name: "amountReceived" }) || 0
-  );
+
   const cartItems = useSelector((state: RootState) => state.cart.items);
 
   // Tính tổng tiền giỏ hàng
@@ -27,7 +25,14 @@ const PaymentForm = () => {
     [cartItems]
   );
 
-  const changeAmount = amountReceived - totalAmount;
+  // State lưu số tiền nhập vào (cập nhật tức thì)
+  const [amountReceived, setAmountReceived] = useState(0);
+
+  // Tính số tiền dư
+  const changeAmount = useMemo(
+    () => amountReceived - totalAmount,
+    [amountReceived, totalAmount]
+  );
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -63,20 +68,25 @@ const PaymentForm = () => {
                 allowNegative={false}
                 suffix=" VND"
                 fullWidth
+                value={amountReceived || ""}
                 onValueChange={(values) => {
-                  setValue("amountReceived", values.floatValue || 0);
+                  const value = values.floatValue || 0;
+                  setAmountReceived(value);
+                  setValue("amountReceived", value);
                 }}
               />
             )}
           />
-          <Typography
-            variant="body1"
-            color={changeAmount < 0 ? "error" : "primary"}
-          >
-            {changeAmount < 0
-              ? `Còn thiếu: ${Math.abs(changeAmount).toLocaleString()} VND`
-              : `Tiền thừa: ${changeAmount.toLocaleString()} VND`}
-          </Typography>
+          {amountReceived > 0 && (
+            <Typography
+              variant="body1"
+              color={changeAmount < 0 ? "error" : "primary"}
+            >
+              {changeAmount < 0
+                ? `Còn thiếu: ${Math.abs(changeAmount).toLocaleString()} VND`
+                : `Tiền thừa: ${changeAmount.toLocaleString()} VND`}
+            </Typography>
+          )}
         </Box>
       )}
     </Box>
