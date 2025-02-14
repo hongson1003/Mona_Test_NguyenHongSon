@@ -43,10 +43,11 @@ const CreateOrder = () => {
     <Container
       maxWidth="lg"
       sx={{
+        py: 3,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        minHeight: "100vh",
+        height: "100vh",
       }}
     >
       {/* Tiêu đề */}

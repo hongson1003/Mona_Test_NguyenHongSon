@@ -1,3 +1,3 @@
 export * from "./products";
-export * from "./discounts";
+export * from "./vouchers";
 export * from "./paymentMethods";

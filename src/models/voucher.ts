@@ -1,8 +1,6 @@
-import { IBaseModel } from "./base";
-
 export type DiscountType = "percentage" | "fixed";
 
-export interface IDiscount extends IBaseModel {
+export interface IVoucher {
   code: string;
   type: DiscountType;
   value: number;

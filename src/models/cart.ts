@@ -1,5 +1,5 @@
 import { IBaseModel } from "./base";
-import { IDiscount } from "./discount";
+import { IVoucher } from "./voucher";
 
 export interface ICartProduct {
   id: number;
@@ -11,7 +11,7 @@ export interface ICartProduct {
 export interface ICartItem extends IBaseModel {
   product: ICartProduct;
   quantity: number;
-  discount?: IDiscount; // Mỗi sản phẩm có thể có 1 mã khuyến mãi
+  discount?: IVoucher; // Mỗi sản phẩm có thể có 1 mã khuyến mãi
 }
 
 export interface ICartState {

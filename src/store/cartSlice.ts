@@ -1,5 +1,5 @@
 import { products } from "@/mocks";
-import { IDiscount } from "@/models";
+import { IVoucher } from "@/models";
 import { ICartProduct, ICartState } from "@/models/cart";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -64,7 +64,7 @@ const cartSlice = createSlice({
     },
     applyDiscount: (
       state,
-      action: PayloadAction<{ id: number; discount: IDiscount }>
+      action: PayloadAction<{ id: number; discount: IVoucher }>
     ) => {
       const item = state.items.find((item) => item.id === action.payload.id);
       if (item) {

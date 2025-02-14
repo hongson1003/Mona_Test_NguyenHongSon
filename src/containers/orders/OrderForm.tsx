@@ -32,7 +32,7 @@ const OrderForm = ({ methods, onSelectProducts }: IOrderFormProps) => {
         </Paper>
 
         {/* Paper cho phương thức thanh toán */}
-        <Paper sx={{ p: 3 }}>
+        <Paper sx={{ p: 2 }}>
           <Typography variant="h6" sx={{ mb: 2 }}>
             Phương thức thanh toán
           </Typography>

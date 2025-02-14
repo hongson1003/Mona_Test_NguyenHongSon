@@ -1,6 +1,7 @@
-import { ICartItem } from "@/models";
+import { ICartItem, IVoucher } from "@/models";
 import { Box, Typography } from "@mui/material";
 import CartItem from "./CartItem";
+import { vouchers } from "@/mocks";
 
 interface CartItemListProps {
   cartItems: ICartItem[];
@@ -40,14 +41,17 @@ const CartItemList: React.FC<CartItemListProps> = ({
       </Typography>
     </Box>
   ) : (
-    cartItems.map((item) => (
-      <CartItem
-        key={item.id}
-        item={item}
-        onRemove={onRemove}
-        onUpdateQuantity={onUpdateQuantity}
-      />
-    ))
+    <Box>
+      {cartItems.map((item) => (
+        <CartItem
+          key={item.id}
+          item={item}
+          onRemove={onRemove}
+          onUpdateQuantity={onUpdateQuantity}
+          vouchers={vouchers as IVoucher[]}
+        />
+      ))}
+    </Box>
   );
 };
 

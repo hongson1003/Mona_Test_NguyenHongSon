@@ -1,17 +1,21 @@
-import { ICartItem } from "@/models";
+import { ICartItem, IVoucher } from "@/models";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, MenuItem, Select, Typography } from "@mui/material";
 
 const CartItem = ({
   item,
   onRemove,
   onUpdateQuantity,
+  vouchers,
+  onSelectVoucher,
 }: {
   item: ICartItem;
   onRemove: (id: number) => void;
   onUpdateQuantity: (id: number, quantity: number) => void;
+  vouchers: IVoucher[];
+  onSelectVoucher: (itemId: number, voucherId: number | null) => void;
 }) => {
   return (
     <Box
@@ -39,6 +43,16 @@ const CartItem = ({
         <Typography variant="body2" color="textSecondary">
           {item.product.price.toLocaleString()} VND
         </Typography>
+
+        {/* Chọn phiếu giảm giá */}
+        <Select displayEmpty fullWidth size="small" sx={{ mt: 1 }}>
+          <MenuItem value="">Không sử dụng voucher</MenuItem>
+          {vouchers.map((voucher) => (
+            <MenuItem key={voucher.code} value={voucher.code}>
+              {voucher.code} - Giảm {voucher.value.toLocaleString()} VND
+            </MenuItem>
+          ))}
+        </Select>
 
         {/* Nút tăng giảm số lượng */}
         <Box
