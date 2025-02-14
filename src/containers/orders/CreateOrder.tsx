@@ -13,6 +13,16 @@ import * as yup from "yup";
 import CartSummary from "./CartSummary";
 import OrderForm from "./OrderForm";
 
+interface FlyingProduct {
+  id: number;
+  name: string;
+  image: string;
+  x: number;
+  y: number;
+  cartX: number;
+  cartY: number;
+}
+
 const defaultValues: IOrderForm = {
   name: "",
   email: "",
@@ -54,16 +64,6 @@ const CreateOrder = () => {
     typeof rawAmountReceived === "string"
       ? parseInt(rawAmountReceived.replace(/[^0-9]/g, ""), 10) || 0
       : rawAmountReceived;
-
-  interface FlyingProduct {
-    id: number;
-    name: string;
-    image: string;
-    x: number;
-    y: number;
-    cartX: number;
-    cartY: number;
-  }
 
   const [flyingProduct, setFlyingProduct] = useState<FlyingProduct | null>(
     null
