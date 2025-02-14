@@ -12,7 +12,7 @@ interface ICartItemProps {
   onUpdateQuantity: (id: number, quantity: number) => void;
   vouchers: IVoucher[];
   onSelectVoucher: (itemId: number, voucherId: string | null) => void;
-  selectedVoucher: string | null;
+  selectedVoucher: IVoucher | null;
 }
 
 const CartItem = ({

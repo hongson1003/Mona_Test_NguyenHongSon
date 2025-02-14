@@ -5,8 +5,8 @@ import { MenuItem, Select, Tooltip } from "@mui/material";
 interface IVoucherSelectProps {
   itemId: number;
   vouchers: IVoucher[];
-  selectedVoucher: string | null;
-  onSelectVoucher: (itemId: number, voucherId: string | null) => void;
+  selectedVoucher: IVoucher | null;
+  onSelectVoucher: (itemId: number, voucher: string | null) => void;
 }
 
 const VoucherSelect = ({
@@ -20,7 +20,7 @@ const VoucherSelect = ({
       fullWidth
       size="small"
       sx={{ mt: 1 }}
-      value={selectedVoucher ?? "none"}
+      value={selectedVoucher?.code ?? "none"}
       onChange={(e) =>
         onSelectVoucher(
           itemId,

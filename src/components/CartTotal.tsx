@@ -14,9 +14,33 @@ const CartTotal = ({ cartItems }: ICartTotalProps) => {
   );
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-      <Typography variant="subtitle1">Tổng tiền:</Typography>
-      <Typography variant="h6" color="primary">
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        mt: 3,
+        p: 2,
+        bgcolor: "primary.lighter",
+        borderRadius: 2,
+        boxShadow: 2,
+      }}
+    >
+      <Typography variant="h6" fontWeight="bold">
+        Tổng tiền:
+      </Typography>
+      <Typography
+        variant="h5"
+        fontWeight="bold"
+        color="error"
+        sx={{
+          backgroundColor: "white",
+          px: 2,
+          py: 1,
+          borderRadius: 1,
+          boxShadow: 1,
+        }}
+      >
         {formatCurrency(totalAmount)}
       </Typography>
     </Box>

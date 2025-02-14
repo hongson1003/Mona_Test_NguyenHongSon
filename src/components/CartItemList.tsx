@@ -56,7 +56,7 @@ const CartItemList: React.FC<ICartItemListProps> = ({
           onRemove={onRemove}
           onUpdateQuantity={onUpdateQuantity}
           vouchers={vouchers as IVoucher[]}
-          selectedVoucher={item.voucher?.code || null}
+          selectedVoucher={item.voucher}
           onSelectVoucher={handleOnSelectVoucher}
         />
       ))}
