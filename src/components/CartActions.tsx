@@ -1,10 +1,12 @@
-import { Button, Box } from "@mui/material";
+import { ICartItem } from "@/models";
+import { Box, Button } from "@mui/material";
 
-interface CartActionsProps {
-  cartItems: any[];
+interface ICartActionsProps {
+  onCheckout: () => void;
+  cartItems: ICartItem[];
 }
 
-const CartActions: React.FC<CartActionsProps> = ({ cartItems }) => {
+const CartActions = ({ onCheckout, cartItems }: ICartActionsProps) => {
   return (
     <Box>
       <Button
@@ -12,6 +14,7 @@ const CartActions: React.FC<CartActionsProps> = ({ cartItems }) => {
         color="primary"
         fullWidth
         disabled={cartItems.length === 0}
+        onClick={onCheckout}
       >
         Thanh toán
       </Button>

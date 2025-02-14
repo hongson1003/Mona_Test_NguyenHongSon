@@ -1,12 +1,13 @@
+import { ICartItem } from "@/models";
 import { Box, Typography } from "@mui/material";
 
 interface CartTotalProps {
-  cartItems: { price: number; quantity: number; discount: number }[];
+  cartItems: ICartItem[];
 }
 
-const CartTotal: React.FC<CartTotalProps> = ({ cartItems }) => {
+const CartTotal = ({ cartItems }: CartTotalProps) => {
   const totalAmount = cartItems.reduce(
-    (sum, item) => sum + (item.price - item.discount) * item.quantity,
+    (sum, item) => sum + item.product.price * item.quantity,
     0
   );
 

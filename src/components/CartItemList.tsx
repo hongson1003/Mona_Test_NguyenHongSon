@@ -1,14 +1,9 @@
+import { ICartItem } from "@/models";
 import { Typography } from "@mui/material";
 import CartItem from "./CartItem";
 
 interface CartItemListProps {
-  cartItems: {
-    id: number;
-    name: string;
-    price: number;
-    quantity: number;
-    discount: number;
-  }[];
+  cartItems: ICartItem[];
   onRemove: (id: number) => void;
 }
 

@@ -1,21 +1,19 @@
 import { CartActions, CartItemList, CartTotal } from "@/components";
+import { RootState } from "@/store";
 import { Paper, Typography } from "@mui/material";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
-const CartSummary = () => {
-  const [cartItems, setCartItems] = useState([
-    { id: 1, name: "Sản phẩm A", price: 50000, quantity: 1, discount: 0 },
-    { id: 2, name: "Sản phẩm B", price: 70000, quantity: 2, discount: 0 },
-  ]);
+interface ICartSummaryProps {
+  onCheckout: () => void;
+}
+
+const CartSummary = ({ onCheckout }: ICartSummaryProps) => {
+  const cartItems = useSelector((state: RootState) => state.cart.items);
 
   const handleRemove = (id: number) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
+    // setCartItems(cartItems.filter((item) => item.id !== id));
   };
-
-  // const totalAmount = cartItems.reduce(
-  //   (sum, item) => sum + (item.price - item.discount) * item.quantity,
-  //   0
-  // );
 
   return (
     <Paper sx={{ p: 3, display: "flex", flexDirection: "column", gap: 2 }}>
@@ -25,7 +23,8 @@ const CartSummary = () => {
 
       <CartTotal cartItems={cartItems} />
 
-      <CartActions cartItems={cartItems} />
+      {/* Truyền onCheckout vào CartActions */}
+      <CartActions cartItems={cartItems} onCheckout={onCheckout} />
     </Paper>
   );
 };

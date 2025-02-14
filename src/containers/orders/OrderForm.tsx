@@ -1,28 +1,17 @@
 import { CustomerInfo, PaymentForm, ProductSelect } from "@/components";
 import { products } from "@/mocks";
+import { ICartProduct, IOrderForm } from "@/models";
 import { Box, Paper, Typography } from "@mui/material";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, UseFormReturn } from "react-hook-form";
 
-const OrderForm = () => {
-  const methods = useForm({
-    defaultValues: {
-      customerName: "",
-      email: "",
-      phone: "",
-      paymentMethod: "cash",
-      amountReceived: 0,
-    },
-  });
+interface IOrderFormProps {
+  methods: UseFormReturn<IOrderForm>;
+  onSelectProducts: (products: ICartProduct[]) => void;
+}
 
-  // const [orderData, setOrderData] = useState(null);
-
-  // const onSubmit = (data: any) => {
-  //   setOrderData(data);
-  //   console.log("Order Data:", data);
-  // };
-
-  const handleOnChangeProduct = (product: any) => {
-    console.log("Selected Product:", product);
+const OrderForm = ({ methods, onSelectProducts }: IOrderFormProps) => {
+  const handleOnChangeProduct = (selectedProducts: ICartProduct[]) => {
+    onSelectProducts(selectedProducts);
   };
 
   return (
