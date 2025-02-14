@@ -1,6 +1,6 @@
 import { IVoucher } from "@/models";
-import { MenuItem, Select } from "@mui/material";
 import { formatCurrency } from "@/utils";
+import { MenuItem, Select, Tooltip } from "@mui/material";
 
 interface IVoucherSelectProps {
   itemId: number;
@@ -31,10 +31,14 @@ const VoucherSelect = ({
       <MenuItem value="none">Không sử dụng voucher</MenuItem>
       {vouchers.map((voucher) => (
         <MenuItem key={voucher.code} value={voucher.code}>
-          {voucher.code} - Giảm{" "}
-          {voucher.type === "fixed"
-            ? formatCurrency(voucher.value)
-            : `${voucher.value}%`}
+          <Tooltip title={`Mã: ${voucher.code}`} arrow>
+            <span>
+              {voucher.code} - Giảm{" "}
+              {voucher.type === "fixed"
+                ? formatCurrency(voucher.value)
+                : `${voucher.value}%`}
+            </span>
+          </Tooltip>
         </MenuItem>
       ))}
     </Select>

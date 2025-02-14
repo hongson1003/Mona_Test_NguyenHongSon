@@ -3,14 +3,14 @@ import { ICartItem, IVoucher } from "@/models";
 import { Box, Typography } from "@mui/material";
 import CartItem from "./CartItem/CartItem";
 
-interface CartItemListProps {
+interface ICartItemListProps {
   cartItems: ICartItem[];
   onRemove: (id: number) => void;
   onUpdateQuantity: (id: number, quantity: number) => void;
   onSelectVoucher: (itemId: number, voucher: IVoucher | null) => void;
 }
 
-const CartItemList: React.FC<CartItemListProps> = ({
+const CartItemList: React.FC<ICartItemListProps> = ({
   cartItems,
   onRemove,
   onUpdateQuantity,
