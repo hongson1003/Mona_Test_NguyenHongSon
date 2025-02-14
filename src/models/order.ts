@@ -6,4 +6,5 @@ export interface IOrderForm {
   phone: string;
   paymentMethod: DiscountType;
   amountReceived: number;
+  products: number[];
 }

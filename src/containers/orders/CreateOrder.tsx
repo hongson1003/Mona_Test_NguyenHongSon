@@ -1,10 +1,9 @@
 import { SectionTitle } from "@/components";
+import { ICartProduct, IOrderForm } from "@/models";
 import { Box, Container } from "@mui/material";
+import { useForm } from "react-hook-form";
 import CartSummary from "./CartSummary";
 import OrderForm from "./OrderForm";
-import { useForm } from "react-hook-form";
-import { ICartProduct, IOrderForm } from "@/models";
-import { useState } from "react";
 
 const defaultValues: IOrderForm = {
   name: "",
@@ -12,6 +11,7 @@ const defaultValues: IOrderForm = {
   phone: "",
   amountReceived: 0,
   paymentMethod: "percentage",
+  products: [],
 };
 
 const CreateOrder = () => {
@@ -19,18 +19,15 @@ const CreateOrder = () => {
     defaultValues: defaultValues,
   });
 
-  const [selectedProducts, setSelectedProducts] = useState<ICartProduct[]>([]);
-
   const handleSelectProducts = (products: ICartProduct[]) => {
-    setSelectedProducts(products);
+    methods.setValue(
+      "products",
+      products.map((p) => p.id)
+    );
   };
 
   const handleCheckout = methods.handleSubmit((data) => {
-    console.log("Dữ liệu đơn hàng:", {
-      customerInfo: data,
-      products: selectedProducts,
-    });
-    alert("Đơn hàng đã được xử lý!");
+    console.log(data);
   });
 
   return (
