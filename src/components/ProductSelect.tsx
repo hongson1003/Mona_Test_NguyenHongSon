@@ -1,5 +1,5 @@
 import { ICartProduct } from "@/models";
-import { Check } from "@mui/icons-material";
+import { Check, Clear } from "@mui/icons-material";
 import {
   FormControl,
   InputLabel,
@@ -16,11 +16,11 @@ interface IProductSelectProps {
 }
 
 const ProductSelect = ({ products, onChange }: IProductSelectProps) => {
+  console.log("ProductSelect render");
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const handleChange = (event: any) => {
     const newSelectedIds = event.target.value as number[];
-
     if (
       newSelectedIds.length !== selectedIds.length ||
       !newSelectedIds.every((id) => selectedIds.includes(id))
@@ -28,6 +28,15 @@ const ProductSelect = ({ products, onChange }: IProductSelectProps) => {
       setSelectedIds(newSelectedIds);
       onChange(products.filter((p) => newSelectedIds.includes(p.id)));
     }
+  };
+
+  // Xử lý khi chọn "Xóa toàn bộ"
+  const handleClearSelection = (event: React.MouseEvent) => {
+    event.preventDefault(); // Ngăn Select bị đóng
+    event.stopPropagation(); // Ngăn chặn sự kiện onChange của Select
+    console.log("Xóa toàn bộ");
+    setSelectedIds([]);
+    onChange([]);
   };
 
   return (
@@ -44,6 +53,17 @@ const ProductSelect = ({ products, onChange }: IProductSelectProps) => {
             .join(", ")
         }
       >
+        {/* Nút xóa toàn bộ */}
+        {selectedIds.length > 0 && (
+          <MenuItem onMouseDown={handleClearSelection} sx={{ color: "red" }}>
+            <ListItemIcon>
+              <Clear sx={{ color: "red" }} />
+            </ListItemIcon>
+            <ListItemText primary="Xóa toàn bộ" />
+          </MenuItem>
+        )}
+
+        {/* Danh sách sản phẩm */}
         {products.map((product) => (
           <MenuItem key={product.id} value={product.id} sx={{ py: 1 }}>
             <ListItemIcon>

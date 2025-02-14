@@ -1,6 +1,6 @@
 import { products } from "@/mocks";
+import { IDiscount } from "@/models";
 import { ICartProduct, ICartState } from "@/models/cart";
-import { IDiscount } from "@/models/discount";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: ICartState = {
@@ -11,33 +11,45 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    addToCart: (
+    setCarts: (
       state,
-      action: PayloadAction<{ id: number; quantity?: number }>
+      action: PayloadAction<{ id: number; quantity?: number }[]>
     ) => {
-      const product = products.find((p) => p.id === action.payload.id);
-      if (!product) return;
+      // Lọc ra danh sách các ID từ payload
+      const newCartIds = action.payload.map((item) => item.id);
 
-      const existingItem = state.items.find(
-        (item) => item.product.id === product.id
+      // Xóa những sản phẩm không có trong danh sách mới
+      state.items = state.items.filter((item) =>
+        newCartIds.includes(item.product.id)
       );
-      if (existingItem) {
-        existingItem.quantity += action.payload.quantity || 1;
-      } else {
-        const cartProduct: ICartProduct = {
-          id: product.id,
-          name: product.name,
-          price: product.price,
-          imageSrc: product.imageSrc,
-        };
 
-        state.items.push({
-          id: Date.now(), // ID riêng cho item trong cart, tránh trùng với product.id
-          product: cartProduct,
-          quantity: action.payload.quantity || 1,
-        });
-      }
+      // Duyệt qua danh sách mới để cập nhật giỏ hàng
+      action.payload.forEach(({ id, quantity }) => {
+        const product = products.find((p) => p.id === id);
+        if (!product) return;
+
+        const existingItem = state.items.find(
+          (item) => item.product.id === product.id
+        );
+        if (existingItem) {
+          existingItem.quantity = quantity || existingItem.quantity;
+        } else {
+          const cartProduct: ICartProduct = {
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            imageSrc: product.imageSrc,
+          };
+
+          state.items.push({
+            id: Date.now(), // ID riêng cho item trong cart, tránh trùng với product.id
+            product: cartProduct,
+            quantity: quantity || 1,
+          });
+        }
+      });
     },
+
     removeFromCart: (state, action: PayloadAction<number>) => {
       state.items = state.items.filter((item) => item.id !== action.payload);
     },
@@ -66,7 +78,7 @@ const cartSlice = createSlice({
 });
 
 export const {
-  addToCart,
+  setCarts,
   removeFromCart,
   updateQuantity,
   applyDiscount,

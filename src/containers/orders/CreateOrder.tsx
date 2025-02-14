@@ -1,7 +1,9 @@
 import { SectionTitle } from "@/components";
 import { ICartProduct, IOrderForm } from "@/models";
+import { setCarts } from "@/store";
 import { Box, Container } from "@mui/material";
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import CartSummary from "./CartSummary";
 import OrderForm from "./OrderForm";
 
@@ -18,12 +20,19 @@ const CreateOrder = () => {
   const methods = useForm<IOrderForm>({
     defaultValues: defaultValues,
   });
+  const dispatch = useDispatch();
 
   const handleSelectProducts = (products: ICartProduct[]) => {
     methods.setValue(
       "products",
       products.map((p) => p.id)
     );
+
+    const productCarts = products.map((p) => ({
+      id: p.id,
+    }));
+
+    dispatch(setCarts(productCarts));
   };
 
   const handleCheckout = methods.handleSubmit((data) => {
