@@ -6,7 +6,7 @@ interface ISectionTitleProps {
 
 const SectionTitle = ({ title }: ISectionTitleProps) => {
   return (
-    <Box sx={{ textAlign: "center", position: "relative", mb: 4 }}>
+    <Box sx={{ textAlign: "center", position: "relative", mb: 2 }}>
       <Typography variant="h4" fontWeight="bold" color="primary">
         {title}
       </Typography>

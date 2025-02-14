@@ -10,12 +10,14 @@ const CartItem = ({
   onUpdateQuantity,
   vouchers,
   onSelectVoucher,
+  selectedVoucher,
 }: {
   item: ICartItem;
   onRemove: (id: number) => void;
   onUpdateQuantity: (id: number, quantity: number) => void;
   vouchers: IVoucher[];
-  onSelectVoucher: (itemId: number, voucherId: number | null) => void;
+  onSelectVoucher: (itemId: number, voucherId: string | null) => void;
+  selectedVoucher: string | null;
 }) => {
   return (
     <Box
@@ -45,8 +47,19 @@ const CartItem = ({
         </Typography>
 
         {/* Chọn phiếu giảm giá */}
-        <Select displayEmpty fullWidth size="small" sx={{ mt: 1 }}>
-          <MenuItem value="">Không sử dụng voucher</MenuItem>
+        <Select
+          fullWidth
+          size="small"
+          sx={{ mt: 1 }}
+          value={selectedVoucher ?? "none"}
+          onChange={(e) =>
+            onSelectVoucher(
+              item.id,
+              e.target.value === "none" ? null : e.target.value
+            )
+          }
+        >
+          <MenuItem value="none">Không sử dụng voucher</MenuItem>
           {vouchers.map((voucher) => (
             <MenuItem key={voucher.code} value={voucher.code}>
               {voucher.code} - Giảm {voucher.value.toLocaleString()} VND
@@ -55,14 +68,7 @@ const CartItem = ({
         </Select>
 
         {/* Nút tăng giảm số lượng */}
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            mt: 1,
-            gap: 1.5,
-          }}
-        >
+        <Box sx={{ display: "flex", alignItems: "center", mt: 1, gap: 1.5 }}>
           <IconButton
             sx={{
               border: "1px solid #ddd",
@@ -106,10 +112,12 @@ const CartItem = ({
         </Box>
       </Box>
 
-      {/* Xóa sản phẩm */}
-      <IconButton color="error" onClick={() => onRemove(item.id)}>
-        <DeleteIcon />
-      </IconButton>
+      {/* Nút xóa sản phẩm */}
+      <Box sx={{ alignSelf: "flex-end" }}>
+        <IconButton color="error" onClick={() => onRemove(item.id)}>
+          <DeleteIcon />
+        </IconButton>
+      </Box>
     </Box>
   );
 };

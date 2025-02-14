@@ -13,9 +13,14 @@ import { useState } from "react";
 interface IProductSelectProps {
   products: ICartProduct[];
   onChange: (products: ICartProduct[]) => void;
+  size?: "small" | "medium";
 }
 
-const ProductSelect = ({ products, onChange }: IProductSelectProps) => {
+const ProductSelect = ({
+  products,
+  onChange,
+  size = "medium",
+}: IProductSelectProps) => {
   console.log("ProductSelect render");
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
@@ -43,6 +48,7 @@ const ProductSelect = ({ products, onChange }: IProductSelectProps) => {
     <FormControl fullWidth>
       <InputLabel>Chọn sản phẩm</InputLabel>
       <Select
+        size={size}
         multiple
         value={selectedIds}
         onChange={handleChange}
