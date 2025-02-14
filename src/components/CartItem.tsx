@@ -55,14 +55,17 @@ const CartItem = ({
           onChange={(e) =>
             onSelectVoucher(
               item.id,
-              e.target.value === "none" ? null : e.target.value
+              e.target.value === "none" ? null : (e.target.value as string)
             )
           }
         >
           <MenuItem value="none">Không sử dụng voucher</MenuItem>
           {vouchers.map((voucher) => (
             <MenuItem key={voucher.code} value={voucher.code}>
-              {voucher.code} - Giảm {voucher.value.toLocaleString()} VND
+              {voucher.code} - Giảm{" "}
+              {voucher.type === "fixed"
+                ? `${voucher.value.toLocaleString()} VND`
+                : `${voucher.value}%`}
             </MenuItem>
           ))}
         </Select>

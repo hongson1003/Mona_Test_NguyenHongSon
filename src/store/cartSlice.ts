@@ -45,6 +45,7 @@ const cartSlice = createSlice({
             id: Date.now(), // ID riêng cho item trong cart, tránh trùng với product.id
             product: cartProduct,
             quantity: quantity || 1,
+            voucher: null,
           });
         }
       });
@@ -64,11 +65,11 @@ const cartSlice = createSlice({
     },
     applyDiscount: (
       state,
-      action: PayloadAction<{ id: number; discount: IVoucher }>
+      action: PayloadAction<{ id: number; voucher: IVoucher | null }>
     ) => {
       const item = state.items.find((item) => item.id === action.payload.id);
       if (item) {
-        item.discount = action.payload.discount;
+        item.voucher = action.payload.voucher;
       }
     },
     clearCart: (state) => {

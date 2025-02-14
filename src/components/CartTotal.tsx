@@ -1,21 +1,23 @@
 import { ICartItem } from "@/models";
+import { calculateTotalPrice, formatCurrency } from "@/utils";
 import { Box, Typography } from "@mui/material";
+import { useMemo } from "react";
 
-interface CartTotalProps {
+interface ICartTotalProps {
   cartItems: ICartItem[];
 }
 
-const CartTotal = ({ cartItems }: CartTotalProps) => {
-  const totalAmount = cartItems.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
-    0
+const CartTotal = ({ cartItems }: ICartTotalProps) => {
+  const totalAmount = useMemo(
+    () => calculateTotalPrice(cartItems),
+    [cartItems]
   );
 
   return (
     <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
       <Typography variant="subtitle1">Tổng tiền:</Typography>
       <Typography variant="h6" color="primary">
-        {totalAmount.toLocaleString()} VND
+        {formatCurrency(totalAmount)}
       </Typography>
     </Box>
   );

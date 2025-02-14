@@ -11,7 +11,7 @@ export interface ICartProduct {
 export interface ICartItem extends IBaseModel {
   product: ICartProduct;
   quantity: number;
-  discount?: IVoucher; // Mỗi sản phẩm có thể có 1 mã khuyến mãi
+  voucher: IVoucher | null;
 }
 
 export interface ICartState {

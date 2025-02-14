@@ -1,5 +1,11 @@
 import { CartActions, CartItemList, CartTotal } from "@/components";
-import { removeFromCart, RootState, updateQuantity } from "@/store";
+import { IVoucher } from "@/models";
+import {
+  applyDiscount,
+  removeFromCart,
+  RootState,
+  updateQuantity,
+} from "@/store";
 import { Box, Paper, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -19,6 +25,10 @@ const CartSummary = ({ onCheckout }: ICartSummaryProps) => {
     dispatch(updateQuantity({ id, quantity }));
   };
 
+  const handleOnSelectVoucher = (itemId: number, voucher: IVoucher | null) => {
+    dispatch(applyDiscount({ id: itemId, voucher }));
+  };
+
   return (
     <Paper
       sx={{
@@ -36,7 +46,6 @@ const CartSummary = ({ onCheckout }: ICartSummaryProps) => {
         sx={{
           flex: 1,
           overflow: "auto",
-          // maxHeight: "350px",
           pb: 2,
         }}
       >
@@ -44,6 +53,7 @@ const CartSummary = ({ onCheckout }: ICartSummaryProps) => {
           cartItems={cartItems}
           onRemove={handleRemove}
           onUpdateQuantity={handleOnUpdateQuantity}
+          onSelectVoucher={handleOnSelectVoucher}
         />
       </Box>
 

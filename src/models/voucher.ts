@@ -1,4 +1,4 @@
-export type DiscountType = "percentage" | "fixed";
+export type DiscountType = "percent" | "fixed";
 
 export interface IVoucher {
   code: string;
