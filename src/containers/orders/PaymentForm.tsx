@@ -25,10 +25,10 @@ const PaymentForm = () => {
     [cartItems]
   );
 
-  // State lưu số tiền nhập vào (cập nhật tức thì)
+  // State lưu số tiền nhập vào
   const [amountReceived, setAmountReceived] = useState(0);
 
-  // Tính số tiền dư
+  // Tính số tiền thừa
   const changeAmount = useMemo(
     () => amountReceived - totalAmount,
     [amountReceived, totalAmount]
@@ -77,14 +77,11 @@ const PaymentForm = () => {
               />
             )}
           />
-          {amountReceived > 0 && (
-            <Typography
-              variant="body1"
-              color={changeAmount < 0 ? "error" : "primary"}
-            >
-              {changeAmount < 0
-                ? `Còn thiếu: ${Math.abs(changeAmount).toLocaleString()} VND`
-                : `Tiền thừa: ${changeAmount.toLocaleString()} VND`}
+
+          {/* Chỉ hiển thị tiền thừa khi số tiền khách đưa > tổng tiền */}
+          {amountReceived > totalAmount && (
+            <Typography variant="body1" color="primary" fontWeight="bold">
+              Tiền thừa trả khách: {changeAmount.toLocaleString()} VND
             </Typography>
           )}
         </Box>
