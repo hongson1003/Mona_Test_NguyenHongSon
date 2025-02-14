@@ -1,12 +1,14 @@
 import { ConfirmOrderModal, SectionTitle } from "@/components";
-import { ICartProduct, IOrderForm } from "@/models";
+import { ICartProduct, IOrderForm, PaymentMethod } from "@/models";
 import { RootState, setCarts } from "@/store";
 import { calculateTotalPrice } from "@/utils";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Container } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import * as yup from "yup";
 import CartSummary from "./CartSummary";
 import OrderForm from "./OrderForm";
 
@@ -16,11 +18,33 @@ const defaultValues: IOrderForm = {
   phone: "",
   amountReceived: 0,
   paymentMethod: "cash",
-  cartItems: [],
 };
 
+const schema = yup.object().shape({
+  name: yup
+    .string()
+    .required("Họ tên không được để trống")
+    .min(2, "Họ tên quá ngắn"),
+  email: yup
+    .string()
+    .email("Email không hợp lệ")
+    .required("Email không được để trống"),
+  phone: yup
+    .string()
+    .matches(/^\d{10,}$/, "Số điện thoại không hợp lệ")
+    .required("Số điện thoại không được để trống"),
+
+  paymentMethod: yup
+    .mixed<PaymentMethod>()
+    .oneOf(["cash", "card"])
+    .required("Phương thức thanh toán không được để trống"),
+});
+
 const CreateOrder = () => {
-  const methods = useForm<IOrderForm>({ defaultValues });
+  const methods = useForm<IOrderForm>({
+    defaultValues,
+    resolver: yupResolver(schema),
+  });
   const dispatch = useDispatch();
   const carts = useSelector((state: RootState) => state.cart.items);
   const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
@@ -30,15 +54,12 @@ const CreateOrder = () => {
       ? parseInt(rawAmountReceived.replace(/[^0-9]/g, ""), 10) || 0
       : rawAmountReceived;
 
-  useEffect(() => {
-    methods.setValue("cartItems", carts);
-  }, [carts]);
-
   const handleSelectProducts = (products: ICartProduct[]) => {
     dispatch(setCarts(products.map((p) => ({ id: p.id }))));
   };
 
   const handleCheckout = methods.handleSubmit(() => {
+    console.log("Checkout", methods.getValues());
     const total = calculateTotalPrice(carts);
     if (total > amountReceived) {
       return toast.error("Số tiền nhận phải lớn hơn hoặc bằng tổng tiền");
@@ -46,6 +67,7 @@ const CreateOrder = () => {
       return toast.error("Vui lòng chọn sản phẩm");
     }
 
+    console.log("Checkout", methods.getValues());
     setConfirmModalOpen(true);
   });
 
@@ -102,7 +124,7 @@ const CreateOrder = () => {
       </Container>
 
       <ConfirmOrderModal
-        cartItems={orderData.cartItems}
+        cartItems={carts}
         open={isConfirmModalOpen}
         customerInfo={orderData}
         paymentMethod={orderData.paymentMethod}
