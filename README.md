@@ -34,12 +34,16 @@ Chức năng "Tạo Đơn Hàng" cho phép người dùng chọn sản phẩm, n
   ├── SectionTitle.tsx          # Tiêu đề của các section
   ├── CartSummary.tsx           # Hiển thị tổng hợp giỏ hàng
   ├── OrderForm.tsx             # Form nhập thông tin đơn hàng
+  ├── ...
 /pages
   ├── CreateOrder.tsx           # Trang tạo đơn hàng
+  ├── ...
 /store
   ├── cartSlice.ts              # Redux slice quản lý giỏ hàng
+  ├── ...
 /utils
   ├── calculateTotalPrice.ts    # Hàm tính tổng giá trị đơn hàng
+  ├── ...
 ```
 
 ## Chức Năng Chính
@@ -51,6 +55,13 @@ Chức năng "Tạo Đơn Hàng" cho phép người dùng chọn sản phẩm, n
 5. **Hiệu ứng sản phẩm bay vào giỏ hàng**: Khi thêm mới sản phẩm, hình ảnh sản phẩm sẽ bay về giỏ hàng.
 6. **Xác nhận đơn hàng**: Hiển thị thông tin đơn hàng trước khi xác nhận.
 7. **Thông báo thành công hoặc lỗi**: Dùng Toastify để hiển thị trạng thái đơn hàng.
+
+### **🎯 Cải tiến so với bản cũ**
+
+✅ **Thêm hỗ trợ voucher** trong chức năng đặt hàng.  
+✅ **Cập nhật cấu trúc mã nguồn**, thêm `voucherSlice.ts` và `applyVoucher.ts`.  
+✅ **Hướng dẫn cách nhập mã giảm giá** cho người dùng.  
+✅ **Lưu ý về giới hạn của voucher** (ngày hết hạn, số lần sử dụng, v.v.).
 
 ## Hướng Dẫn Sử Dụng
 
@@ -71,4 +82,4 @@ Nếu bạn muốn đóng góp hoặc cải tiến tính năng, hãy tạo một
 
 ---
 
-**Tác giả:** Nguyễn Hồng Sơn - DHKTPM17C
+**Tác giả:** Nguyễn Hồng Sơn
