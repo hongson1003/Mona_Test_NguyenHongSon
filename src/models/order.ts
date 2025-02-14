@@ -1,10 +1,10 @@
-import { DiscountType } from "./discount";
+type PaymentMethod = "cash" | "card";
 
 export interface IOrderForm {
   name: string;
   email: string;
   phone: string;
-  paymentMethod: DiscountType;
+  paymentMethod: PaymentMethod;
   amountReceived: number;
   products: number[];
 }

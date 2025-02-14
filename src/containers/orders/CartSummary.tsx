@@ -1,7 +1,7 @@
 import { CartActions, CartItemList, CartTotal } from "@/components";
-import { RootState } from "@/store";
-import { Paper, Typography } from "@mui/material";
-import { useSelector } from "react-redux";
+import { removeFromCart, RootState, updateQuantity } from "@/store";
+import { Box, Paper, Typography } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
 
 interface ICartSummaryProps {
   onCheckout: () => void;
@@ -9,21 +9,59 @@ interface ICartSummaryProps {
 
 const CartSummary = ({ onCheckout }: ICartSummaryProps) => {
   const cartItems = useSelector((state: RootState) => state.cart.items);
+  const dispatch = useDispatch();
 
   const handleRemove = (id: number) => {
-    // setCartItems(cartItems.filter((item) => item.id !== id));
+    dispatch(removeFromCart(id));
+  };
+
+  const handleOnUpdateQuantity = (id: number, quantity: number) => {
+    dispatch(updateQuantity({ id, quantity }));
   };
 
   return (
-    <Paper sx={{ p: 3, display: "flex", flexDirection: "column", gap: 2 }}>
+    <Paper
+      sx={{
+        p: 3,
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+        height: "100%",
+      }}
+    >
       <Typography variant="h6">Giỏ hàng & Thanh toán</Typography>
 
-      <CartItemList cartItems={cartItems} onRemove={handleRemove} />
+      {/* Danh sách sản phẩm cuộn được */}
+      <Box
+        sx={{
+          flex: 1,
+          overflow: "auto",
+          // maxHeight: "350px",
+          pb: 2,
+        }}
+      >
+        <CartItemList
+          cartItems={cartItems}
+          onRemove={handleRemove}
+          onUpdateQuantity={handleOnUpdateQuantity}
+        />
+      </Box>
 
+      {/* Tổng tiền */}
       <CartTotal cartItems={cartItems} />
 
-      {/* Truyền onCheckout vào CartActions */}
-      <CartActions cartItems={cartItems} onCheckout={onCheckout} />
+      {/* Nút thanh toán cố định */}
+      <Box
+        sx={{
+          position: "sticky",
+          bottom: 0,
+          backgroundColor: "white",
+          py: 2,
+          boxShadow: "0 -2px 4px rgba(0,0,0,0.1)",
+        }}
+      >
+        <CartActions cartItems={cartItems} onCheckout={onCheckout} />
+      </Box>
     </Paper>
   );
 };

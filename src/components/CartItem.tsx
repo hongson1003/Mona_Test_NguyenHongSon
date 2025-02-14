@@ -1,8 +1,8 @@
 import { ICartItem } from "@/models";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { Box, IconButton, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import RemoveIcon from "@mui/icons-material/Remove";
+import { Box, IconButton, Typography } from "@mui/material";
 
 const CartItem = ({
   item,
@@ -46,22 +46,48 @@ const CartItem = ({
             display: "flex",
             alignItems: "center",
             mt: 1,
-            gap: 1,
+            gap: 1.5,
           }}
         >
           <IconButton
+            sx={{
+              border: "1px solid #ddd",
+              borderRadius: "8px",
+              padding: "4px",
+              minWidth: 32,
+              minHeight: 32,
+            }}
             size="small"
             onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
             disabled={item.quantity <= 1}
           >
-            <RemoveIcon />
+            <RemoveIcon fontSize="small" />
           </IconButton>
-          <Typography>{item.quantity}</Typography>
+
+          <Typography
+            sx={{
+              fontSize: "1rem",
+              fontWeight: 500,
+              px: 1.5,
+              textAlign: "center",
+              minWidth: 24,
+            }}
+          >
+            {item.quantity}
+          </Typography>
+
           <IconButton
+            sx={{
+              border: "1px solid #ddd",
+              borderRadius: "8px",
+              padding: "4px",
+              minWidth: 32,
+              minHeight: 32,
+            }}
             size="small"
             onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
           >
-            <AddIcon />
+            <AddIcon fontSize="small" />
           </IconButton>
         </Box>
       </Box>

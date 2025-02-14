@@ -12,7 +12,7 @@ const defaultValues: IOrderForm = {
   email: "",
   phone: "",
   amountReceived: 0,
-  paymentMethod: "percentage",
+  paymentMethod: "cash",
   products: [],
 };
 
@@ -43,7 +43,6 @@ const CreateOrder = () => {
     <Container
       maxWidth="lg"
       sx={{
-        py: 3,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",

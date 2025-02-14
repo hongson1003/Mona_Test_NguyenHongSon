@@ -18,7 +18,7 @@ const OrderForm = ({ methods, onSelectProducts }: IOrderFormProps) => {
     <FormProvider {...methods}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
         {/* Paper cho thông tin khách hàng */}
-        <Paper sx={{ p: 3 }}>
+        <Paper sx={{ p: 2 }}>
           <Typography variant="h6" sx={{ mb: 2 }}>
             Thông tin khách hàng
           </Typography>
