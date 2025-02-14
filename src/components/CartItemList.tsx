@@ -1,7 +1,7 @@
 import { vouchers } from "@/mocks";
 import { ICartItem, IVoucher } from "@/models";
 import { Box, Typography } from "@mui/material";
-import CartItem from "./CartItem";
+import CartItem from "./CartItem/CartItem";
 
 interface CartItemListProps {
   cartItems: ICartItem[];
