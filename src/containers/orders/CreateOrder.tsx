@@ -4,6 +4,7 @@ import { RootState, setCarts } from "@/store";
 import { calculateTotalPrice } from "@/utils";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Container } from "@mui/material";
+import { motion } from "framer-motion";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -54,12 +55,46 @@ const CreateOrder = () => {
       ? parseInt(rawAmountReceived.replace(/[^0-9]/g, ""), 10) || 0
       : rawAmountReceived;
 
+  interface FlyingProduct {
+    id: number;
+    name: string;
+    image: string;
+    x: number;
+    y: number;
+    cartX: number;
+    cartY: number;
+  }
+
+  const [flyingProduct, setFlyingProduct] = useState<FlyingProduct | null>(
+    null
+  );
+
   const handleSelectProducts = (products: ICartProduct[]) => {
+    const previousCartIds = new Set(carts.map((c) => c.id));
+    const newProduct = products.find((p) => !previousCartIds.has(p.id));
+
     dispatch(setCarts(products.map((p) => ({ id: p.id }))));
+
+    if (!newProduct) return; // Nếu không có sản phẩm mới, không chạy hiệu ứng
+
+    const cartList = document.getElementById("cart-item-list");
+
+    setFlyingProduct({
+      id: newProduct.id + Math.random(),
+      name: newProduct.name,
+      image: newProduct.imageSrc,
+      x: 0,
+      y: 0,
+      cartX: cartList?.offsetLeft || 0,
+      cartY: cartList?.offsetTop || 0,
+    });
+
+    setTimeout(() => {
+      setFlyingProduct(null);
+    }, 1000);
   };
 
   const handleCheckout = methods.handleSubmit(() => {
-    console.log("Checkout", methods.getValues());
     const total = calculateTotalPrice(carts);
     if (total > amountReceived) {
       return toast.error("Số tiền nhận phải lớn hơn hoặc bằng tổng tiền");
@@ -132,6 +167,23 @@ const CreateOrder = () => {
         onClose={handleCloseModal}
         onOk={handleOnOk}
       />
+
+      {flyingProduct && (
+        <>
+          <motion.img
+            src={flyingProduct.image}
+            initial={{ x: flyingProduct.x, y: flyingProduct.y, scale: 1 }}
+            animate={{
+              x: flyingProduct.cartX,
+              y: flyingProduct.cartY,
+              scale: 0.2,
+            }}
+            transition={{ duration: 0.7, ease: "easeInOut" }}
+            className="fixed w-24 h-24 rounded-full shadow-lg"
+            style={{ zIndex: 1000, top: 0, left: 0, position: "fixed" }}
+          />
+        </>
+      )}
     </>
   );
 };
