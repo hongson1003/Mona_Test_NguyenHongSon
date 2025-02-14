@@ -1,10 +1,12 @@
 import { ConfirmOrderModal, SectionTitle } from "@/components";
 import { ICartProduct, IOrderForm } from "@/models";
 import { RootState, setCarts } from "@/store";
+import { calculateTotalPrice } from "@/utils";
 import { Box, Container } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import CartSummary from "./CartSummary";
 import OrderForm from "./OrderForm";
 
@@ -22,6 +24,7 @@ const CreateOrder = () => {
   const dispatch = useDispatch();
   const carts = useSelector((state: RootState) => state.cart.items);
   const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
+  const amountReceived = methods.watch("amountReceived");
 
   useEffect(() => {
     methods.setValue("cartItems", carts);
@@ -32,6 +35,13 @@ const CreateOrder = () => {
   };
 
   const handleCheckout = methods.handleSubmit(() => {
+    const total = calculateTotalPrice(carts);
+    if (total >= amountReceived) {
+      return toast.error("Số tiền nhận phải lớn hơn hoặc bằng tổng tiền");
+    } else if (carts.length === 0) {
+      return toast.error("Vui lòng chọn sản phẩm");
+    }
+
     setConfirmModalOpen(true);
   });
 
@@ -40,14 +50,13 @@ const CreateOrder = () => {
   };
 
   const handleOnOk = () => {
-    alert("Đã tạo đơn hàng thành công!");
-    console.log(methods.getValues());
-
     dispatch(setCarts([]));
     methods.reset({
       ...defaultValues,
     });
     setConfirmModalOpen(false);
+
+    toast.success("Đã tạo đơn hàng thành công");
   };
 
   const orderData = methods.getValues();
