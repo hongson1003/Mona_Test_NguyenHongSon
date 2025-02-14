@@ -10,10 +10,11 @@ import {
 } from "@mui/material";
 import { useMemo } from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
+import { NumericFormat } from "react-number-format";
 import { useSelector } from "react-redux";
 
 const PaymentForm = () => {
-  const { control, register } = useFormContext();
+  const { control, setValue } = useFormContext();
   const paymentMethod = useWatch({ control, name: "paymentMethod" });
   const amountReceived = Number(
     useWatch({ control, name: "amountReceived" }) || 0
@@ -49,11 +50,24 @@ const PaymentForm = () => {
       {/* Nếu chọn tiền mặt, hiển thị ô nhập tiền */}
       {paymentMethod === "cash" && (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-          <TextField
-            label="Số tiền khách đưa"
-            type="number"
-            {...register("amountReceived")}
-            fullWidth
+          <Controller
+            name="amountReceived"
+            control={control}
+            render={({ field }) => (
+              <NumericFormat
+                {...field}
+                customInput={TextField}
+                label="Số tiền khách đưa"
+                thousandSeparator=","
+                decimalScale={0}
+                allowNegative={false}
+                suffix=" VND"
+                fullWidth
+                onValueChange={(values) => {
+                  setValue("amountReceived", values.floatValue || 0);
+                }}
+              />
+            )}
           />
           <Typography
             variant="body1"
