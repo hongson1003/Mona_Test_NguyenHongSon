@@ -13,7 +13,7 @@ import * as yup from "yup";
 import CartSummary from "./CartSummary";
 import OrderForm from "./OrderForm";
 
-interface FlyingProduct {
+interface IFlyingProduct {
   id: number;
   name: string;
   image: string;
@@ -65,7 +65,7 @@ const CreateOrder = () => {
       ? parseInt(rawAmountReceived.replace(/[^0-9]/g, ""), 10) || 0
       : rawAmountReceived;
 
-  const [flyingProduct, setFlyingProduct] = useState<FlyingProduct | null>(
+  const [IFlyingProduct, setIFlyingProduct] = useState<IFlyingProduct | null>(
     null
   );
 
@@ -79,7 +79,7 @@ const CreateOrder = () => {
 
     const cartList = document.getElementById("cart-item-list");
 
-    setFlyingProduct({
+    setIFlyingProduct({
       id: newProduct.id + Math.random(),
       name: newProduct.name,
       image: newProduct.imageSrc,
@@ -90,7 +90,7 @@ const CreateOrder = () => {
     });
 
     setTimeout(() => {
-      setFlyingProduct(null);
+      setIFlyingProduct(null);
     }, 1000);
   };
 
@@ -168,14 +168,14 @@ const CreateOrder = () => {
         onOk={handleOnOk}
       />
 
-      {flyingProduct && (
+      {IFlyingProduct && (
         <>
           <motion.img
-            src={flyingProduct.image}
-            initial={{ x: flyingProduct.x, y: flyingProduct.y, scale: 1 }}
+            src={IFlyingProduct.image}
+            initial={{ x: IFlyingProduct.x, y: IFlyingProduct.y, scale: 1 }}
             animate={{
-              x: flyingProduct.cartX,
-              y: flyingProduct.cartY,
+              x: IFlyingProduct.cartX,
+              y: IFlyingProduct.cartY,
               scale: 0.2,
             }}
             transition={{ duration: 0.7, ease: "easeInOut" }}
