@@ -1,11 +1,21 @@
-import { ConfirmOrderModal, SectionTitle } from "@/components";
-import { ICartProduct, IOrderForm, PaymentMethod } from "@/models";
+import {
+  ConfirmOrderModal,
+  RecommendCustomerDialog,
+  SectionTitle,
+} from "@/components";
+import { customers } from "@/mocks";
+import {
+  ICartProduct,
+  ICustomerInfo,
+  IOrderForm,
+  PaymentMethod,
+} from "@/models";
 import { RootState, setCarts } from "@/store";
 import { calculateTotalPrice } from "@/utils";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Container } from "@mui/material";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -65,9 +75,50 @@ const CreateOrder = () => {
       ? parseInt(rawAmountReceived.replace(/[^0-9]/g, ""), 10) || 0
       : rawAmountReceived;
 
+  const [filteredCustomers, setFilteredCustomers] = useState<{
+    open: boolean;
+    customers: ICustomerInfo[];
+    skip: boolean;
+  }>({
+    open: false,
+    customers: [],
+    skip: false,
+  });
+
   const [IFlyingProduct, setIFlyingProduct] = useState<IFlyingProduct | null>(
     null
   );
+  const name = methods.watch("name");
+
+  useEffect(() => {
+    handleOnChangeName(name);
+  }, [name]);
+
+  const handleOnChangeName = (name: string) => {
+    const nameInput = name.toLowerCase();
+
+    if (nameInput.length < 3) {
+      return setFilteredCustomers({ open: false, customers: [], skip: false });
+    } else {
+      const findCustomers = customers.filter((c) =>
+        c.name.toLowerCase().includes(nameInput)
+      );
+
+      if (findCustomers.length > 0) {
+        return setFilteredCustomers({
+          open: true,
+          customers: findCustomers,
+          skip: false,
+        });
+      } else {
+        return setFilteredCustomers({
+          open: false,
+          customers: [],
+          skip: false,
+        });
+      }
+    }
+  };
 
   const handleSelectProducts = (products: ICartProduct[]) => {
     const previousCartIds = new Set(carts.map((c) => c.id));
@@ -120,6 +171,20 @@ const CreateOrder = () => {
     toast.success("Đã tạo đơn hàng thành công");
   };
 
+  const handleOnSelectCustomer = (customer: ICustomerInfo) => {
+    methods.reset({
+      ...defaultValues,
+      name: customer.name,
+      email: customer.email,
+      phone: customer.phone,
+    });
+    setFilteredCustomers(() => ({ open: false, customers: [], skip: true }));
+  };
+
+  const handleOnSkip = () => {
+    setFilteredCustomers((prev) => ({ ...prev, open: false, skip: true }));
+  };
+
   const orderData = methods.getValues();
 
   return (
@@ -166,6 +231,20 @@ const CreateOrder = () => {
         amountReceived={amountReceived}
         onClose={handleCloseModal}
         onOk={handleOnOk}
+      />
+
+      <RecommendCustomerDialog
+        open={(filteredCustomers.open && !filteredCustomers.skip) || false}
+        customers={filteredCustomers.customers}
+        onClose={() =>
+          setFilteredCustomers((prev) => ({
+            ...prev,
+            open: false,
+            skip: false,
+          }))
+        }
+        onSelectCustomer={handleOnSelectCustomer}
+        onSkip={handleOnSkip}
       />
 
       {IFlyingProduct && (

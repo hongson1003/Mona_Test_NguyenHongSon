@@ -7,3 +7,4 @@ export { default as CustomerInfo } from "./CustomerInfo";
 export { default as ProductSelect } from "./ProductSelect";
 export { default as SectionTitle } from "./SectionTitle";
 export { default as ConfirmOrderModal } from "./ConfirmOrderModal";
+export { default as RecommendCustomerDialog } from "./RecommendCustomerDialog";
