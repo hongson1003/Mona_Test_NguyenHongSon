@@ -73,6 +73,7 @@ const CreateOrder = () => {
     typeof rawAmountReceived === "string"
       ? parseInt(rawAmountReceived.replace(/[^0-9]/g, ""), 10) || 0
       : rawAmountReceived;
+  const paymentMethod = methods.watch("paymentMethod");
 
   const [filteredCustomers, setFilteredCustomers] = useState<{
     open: boolean;
@@ -137,10 +138,13 @@ const CreateOrder = () => {
 
   const handleCheckout = methods.handleSubmit(() => {
     const total = calculateTotalPrice(carts);
-    if (total > amountReceived) {
-      return toast.error("Số tiền nhận phải lớn hơn hoặc bằng tổng tiền");
-    } else if (carts.length === 0) {
+
+    if (carts.length === 0) {
       return toast.error("Vui lòng chọn sản phẩm");
+    }
+
+    if (paymentMethod === "cash" && total > amountReceived) {
+      return toast.error("Số tiền nhận phải lớn hơn hoặc bằng tổng tiền");
     }
 
     console.log("Checkout", methods.getValues());

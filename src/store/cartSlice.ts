@@ -54,6 +54,7 @@ const cartSlice = createSlice({
     removeFromCart: (state, action: PayloadAction<number>) => {
       state.items = state.items.filter((item) => item.id !== action.payload);
     },
+
     updateQuantity: (
       state,
       action: PayloadAction<{ id: number; quantity: number }>
@@ -63,6 +64,7 @@ const cartSlice = createSlice({
         item.quantity = action.payload.quantity;
       }
     },
+
     applyDiscount: (
       state,
       action: PayloadAction<{ id: number; voucher: IVoucher | null }>
