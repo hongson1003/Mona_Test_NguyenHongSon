@@ -1,18 +1,57 @@
 import { Box, TextField } from "@mui/material";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
 interface ICustomerInfoProps {
   children?: React.ReactNode;
 }
 
 const CustomerInfo = ({ children }: ICustomerInfoProps) => {
-  const { register } = useFormContext();
+  const { control } = useFormContext();
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-      <TextField label="Tên khách hàng" {...register("name")} fullWidth />
-      <TextField label="Email" {...register("email")} fullWidth />
-      <TextField label="Số điện thoại" {...register("phone")} fullWidth />
+      <Controller
+        name="name"
+        control={control}
+        render={({ field }) => (
+          <TextField
+            {...field}
+            label="Tên khách hàng"
+            fullWidth
+            InputLabelProps={{
+              shrink: field.value ? true : undefined,
+            }}
+          />
+        )}
+      />
+      <Controller
+        name="email"
+        control={control}
+        render={({ field }) => (
+          <TextField
+            {...field}
+            label="Email"
+            fullWidth
+            InputLabelProps={{
+              shrink: field.value ? true : undefined,
+            }}
+          />
+        )}
+      />
+      <Controller
+        name="phone"
+        control={control}
+        render={({ field }) => (
+          <TextField
+            {...field}
+            label="Số điện thoại"
+            fullWidth
+            InputLabelProps={{
+              shrink: field.value ? true : undefined,
+            }}
+          />
+        )}
+      />
 
       {children}
     </Box>

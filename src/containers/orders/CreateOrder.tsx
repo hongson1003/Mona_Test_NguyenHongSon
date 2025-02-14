@@ -3,7 +3,6 @@ import {
   RecommendCustomerDialog,
   SectionTitle,
 } from "@/components";
-import { customers } from "@/mocks";
 import {
   ICartProduct,
   ICustomerInfo,
@@ -15,7 +14,7 @@ import { calculateTotalPrice } from "@/utils";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Container } from "@mui/material";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -88,37 +87,28 @@ const CreateOrder = () => {
   const [IFlyingProduct, setIFlyingProduct] = useState<IFlyingProduct | null>(
     null
   );
-  const name = methods.watch("name");
 
-  useEffect(() => {
-    handleOnChangeName(name);
-  }, [name]);
+  // const name = methods.watch("name");
 
-  const handleOnChangeName = (name: string) => {
-    const nameInput = name.toLowerCase();
+  // useEffect(() => {
+  //   debouncedHandleOnChangeName(name);
+  // }, [name]);
 
-    if (nameInput.length < 3) {
-      return setFilteredCustomers({ open: false, customers: [], skip: false });
-    } else {
-      const findCustomers = customers.filter((c) =>
-        c.name.toLowerCase().includes(nameInput)
-      );
+  // const debouncedHandleOnChangeName = useCallback(
+  //   debounce((nameInput: string) => {
+  //     if (nameInput.length < 3) {
+  //       setFilteredCustomers({ open: false, customers: [], skip: false });
+  //       return;
+  //     }
 
-      if (findCustomers.length > 0) {
-        return setFilteredCustomers({
-          open: true,
-          customers: findCustomers,
-          skip: false,
-        });
-      } else {
-        return setFilteredCustomers({
-          open: false,
-          customers: [],
-          skip: false,
-        });
-      }
-    }
-  };
+  //     const findCustomers = customers.filter((c) =>
+  //       c.name.toLowerCase().includes(nameInput.toLowerCase())
+  //     );
+
+  //     console.log("Find customers", findCustomers);
+  //   }, 300), // Delay 300ms
+  //   []
+  // );
 
   const handleSelectProducts = (products: ICartProduct[]) => {
     const previousCartIds = new Set(carts.map((c) => c.id));
