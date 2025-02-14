@@ -1,13 +1,15 @@
 import { ICartItem, ICustomerInfo } from "@/models";
 import { calculateTotalPrice, formatCurrency } from "@/utils";
+import { Cancel, CheckCircle } from "@mui/icons-material";
 import {
   Box,
   Button,
+  Card,
+  CardContent,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Divider,
   Typography,
 } from "@mui/material";
 import { useMemo } from "react";
@@ -19,6 +21,7 @@ interface IConfirmOrderProps {
   paymentMethod: string;
   amountReceived?: number;
   cartItems: ICartItem[];
+  onOk: () => void;
 }
 
 const ConfirmOrder = ({
@@ -28,6 +31,7 @@ const ConfirmOrder = ({
   paymentMethod,
   amountReceived,
   cartItems,
+  onOk,
 }: IConfirmOrderProps) => {
   // Tính tổng tiền giỏ hàng
   const totalAmount = useMemo(
@@ -42,71 +46,104 @@ const ConfirmOrder = ({
   );
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>Xác nhận đơn hàng</DialogTitle>
+    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+      <DialogTitle textAlign="center" sx={{ fontWeight: "bold" }}>
+        Xác nhận đơn hàng
+      </DialogTitle>
       <DialogContent>
         {/* Thông tin khách hàng */}
-        <Box mb={2}>
-          <Typography variant="h6">Thông tin khách hàng</Typography>
-          <Typography variant="body1">Họ tên: {customerInfo.name}</Typography>
-          <Typography variant="body1">Email: {customerInfo.email}</Typography>
-          <Typography variant="body1">SĐT: {customerInfo.phone}</Typography>
-        </Box>
-
-        <Divider />
+        <Card variant="outlined" sx={{ mb: 2 }}>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              Thông tin khách hàng
+            </Typography>
+            <Typography variant="body1">👤 {customerInfo.name}</Typography>
+            <Typography variant="body1">📧 {customerInfo.email}</Typography>
+            <Typography variant="body1">📞 {customerInfo.phone}</Typography>
+          </CardContent>
+        </Card>
 
         {/* Thông tin giỏ hàng */}
-        <Box mt={2} mb={2}>
-          <Typography variant="h6">Sản phẩm trong giỏ hàng</Typography>
-          {cartItems.map((item: ICartItem) => (
-            <Box
-              key={item.id}
-              display="flex"
-              justifyContent="space-between"
-              my={1}
-            >
-              <Typography variant="body1">
-                {item.product.name} (x{item.quantity})
-              </Typography>
-              <Typography variant="body1">
-                {formatCurrency(item.product.price * item.quantity)}
-              </Typography>
-            </Box>
-          ))}
-        </Box>
-
-        <Divider />
+        <Card variant="outlined" sx={{ mb: 2 }}>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              🛒 Sản phẩm trong giỏ hàng
+            </Typography>
+            {cartItems.map((item: ICartItem) => (
+              <Box
+                key={item.id}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                sx={{ py: 1 }}
+              >
+                <Typography variant="body1">
+                  {item.product.name} (x{item.quantity})
+                </Typography>
+                <Typography variant="body1">
+                  {formatCurrency(item.product.price * item.quantity)}
+                </Typography>
+              </Box>
+            ))}
+          </CardContent>
+        </Card>
 
         {/* Thông tin thanh toán */}
-        <Box mt={2}>
-          <Typography variant="h6">Thanh toán</Typography>
-          <Typography variant="body1">
-            Phương thức: {paymentMethod === "cash" ? "Tiền mặt" : "Thẻ"}
-          </Typography>
-          <Typography variant="body1">
-            Tổng tiền: {formatCurrency(totalAmount)}
-          </Typography>
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              💳 Thông tin thanh toán
+            </Typography>
+            <Typography variant="body1">
+              Phương thức:{" "}
+              <strong>
+                {paymentMethod === "cash" ? "💵 Tiền mặt" : "💳 Thẻ"}
+              </strong>
+            </Typography>
+            <Typography variant="body1">
+              Tổng tiền:{" "}
+              <strong style={{ color: "#d32f2f" }}>
+                {formatCurrency(totalAmount)}
+              </strong>
+            </Typography>
 
-          {paymentMethod === "cash" && amountReceived !== undefined && (
-            <>
-              <Typography variant="body1">
-                Số tiền khách đưa: {formatCurrency(amountReceived)}
-              </Typography>
-              {amountReceived >= totalAmount && (
-                <Typography variant="body1" color="primary">
-                  Tiền thừa trả khách: {formatCurrency(changeAmount)}
+            {paymentMethod === "cash" && amountReceived !== undefined && (
+              <>
+                <Typography variant="body1">
+                  Số tiền khách đưa: {formatCurrency(amountReceived)}
                 </Typography>
-              )}
-            </>
-          )}
-        </Box>
+                {amountReceived >= totalAmount && (
+                  <Typography
+                    variant="body1"
+                    sx={{ color: "#388e3c", fontWeight: "bold" }}
+                  >
+                    Tiền thừa: {formatCurrency(changeAmount)}
+                  </Typography>
+                )}
+              </>
+            )}
+          </CardContent>
+        </Card>
       </DialogContent>
 
-      <DialogActions>
-        <Button onClick={onClose} color="secondary">
+      {/* Hành động */}
+      <DialogActions sx={{ p: 2, justifyContent: "center" }}>
+        <Button
+          onClick={onClose}
+          color="error"
+          variant="contained"
+          startIcon={<Cancel />}
+          sx={{ minWidth: 140 }}
+        >
           Hủy
         </Button>
-        <Button variant="contained" color="primary">
+        <Button
+          onClick={onOk}
+          variant="contained"
+          color="primary"
+          startIcon={<CheckCircle />}
+          sx={{ minWidth: 180 }}
+        >
           Xác nhận thanh toán
         </Button>
       </DialogActions>
