@@ -40,11 +40,13 @@ const CreateOrder = () => {
   };
 
   const handleOnOk = () => {
-    dispatch(setCarts([]));
-    methods.reset();
-    setConfirmModalOpen(false);
-
     alert("Đã tạo đơn hàng thành công!");
+
+    dispatch(setCarts([]));
+    methods.reset({
+      ...defaultValues,
+    });
+    setConfirmModalOpen(false);
   };
 
   const orderData = methods.getValues();

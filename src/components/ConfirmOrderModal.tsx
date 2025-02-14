@@ -110,16 +110,26 @@ const ConfirmOrder = ({
             {paymentMethod === "cash" && amountReceived !== undefined && (
               <>
                 <Typography variant="body1">
-                  Số tiền khách đưa: {formatCurrency(amountReceived)}
+                  Số tiền khách đưa:{" "}
+                  <strong style={{ color: "#1976d2" }}>
+                    {formatCurrency(amountReceived)}
+                  </strong>
                 </Typography>
-                {amountReceived >= totalAmount && (
+                {amountReceived > totalAmount ? (
                   <Typography
                     variant="body1"
                     sx={{ color: "#388e3c", fontWeight: "bold" }}
                   >
                     Tiền thừa: {formatCurrency(changeAmount)}
                   </Typography>
-                )}
+                ) : amountReceived < totalAmount ? (
+                  <Typography
+                    variant="body1"
+                    sx={{ color: "#d32f2f", fontWeight: "bold" }}
+                  >
+                    Thiếu: {formatCurrency(-changeAmount)}
+                  </Typography>
+                ) : null}
               </>
             )}
           </CardContent>
