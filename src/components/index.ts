@@ -1,7 +1,7 @@
 export { default as CartActions } from "./CartActions";
 export { default as CartItem } from "./CartItem/CartItem";
 export { default as CartTotal } from "./CartTotal";
-export { default as PaymentForm } from "./PaymentForm";
+export { default as PaymentForm } from "../containers/orders/PaymentForm";
 export { default as CartItemList } from "./CartItemList";
 export { default as CustomerInfo } from "./CustomerInfo";
 export { default as ProductSelect } from "./ProductSelect";

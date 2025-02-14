@@ -1,15 +1,21 @@
-import { CustomerInfo, PaymentForm, ProductSelect } from "@/components";
+import { CustomerInfo, ProductSelect } from "@/components";
 import { products } from "@/mocks";
 import { ICartProduct, IOrderForm } from "@/models";
 import { Box, Paper, Typography } from "@mui/material";
 import { FormProvider, UseFormReturn } from "react-hook-form";
+import PaymentForm from "./PaymentForm";
 
 interface IOrderFormProps {
   methods: UseFormReturn<IOrderForm>;
   onSelectProducts: (products: ICartProduct[]) => void;
+  productIdValues?: number[];
 }
 
-const OrderForm = ({ methods, onSelectProducts }: IOrderFormProps) => {
+const OrderForm = ({
+  methods,
+  onSelectProducts,
+  productIdValues,
+}: IOrderFormProps) => {
   const handleOnChangeProduct = (selectedProducts: ICartProduct[]) => {
     onSelectProducts(selectedProducts);
   };
@@ -27,6 +33,7 @@ const OrderForm = ({ methods, onSelectProducts }: IOrderFormProps) => {
             <ProductSelect
               products={products}
               onChange={handleOnChangeProduct}
+              productIdValues={productIdValues}
             />
           </CustomerInfo>
         </Paper>

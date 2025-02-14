@@ -1,9 +1,9 @@
 import { SectionTitle } from "@/components";
 import { ICartProduct, IOrderForm } from "@/models";
-import { setCarts } from "@/store";
+import { RootState, setCarts } from "@/store";
 import { Box, Container } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CartSummary from "./CartSummary";
 import OrderForm from "./OrderForm";
 
@@ -21,13 +21,9 @@ const CreateOrder = () => {
     defaultValues: defaultValues,
   });
   const dispatch = useDispatch();
+  const carts = useSelector((state: RootState) => state.cart.items);
 
   const handleSelectProducts = (products: ICartProduct[]) => {
-    methods.setValue(
-      "products",
-      products.map((p) => p.id)
-    );
-
     const productCarts = products.map((p) => ({
       id: p.id,
     }));
@@ -67,6 +63,7 @@ const CreateOrder = () => {
           <OrderForm
             methods={methods}
             onSelectProducts={handleSelectProducts}
+            productIdValues={carts.map((c) => c.product.id)}
           />
         </Box>
 

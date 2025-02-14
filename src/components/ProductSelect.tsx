@@ -8,21 +8,28 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface IProductSelectProps {
   products: ICartProduct[];
   onChange: (products: ICartProduct[]) => void;
   size?: "small" | "medium";
+  productIdValues?: number[];
 }
 
 const ProductSelect = ({
   products,
   onChange,
   size = "medium",
+  productIdValues = [],
 }: IProductSelectProps) => {
-  console.log("ProductSelect render");
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
+  console.log("🚀 ~ productIdValues:", productIdValues);
+
+  useEffect(() => {
+    setSelectedIds(productIdValues);
+  }, [productIdValues]);
 
   const handleChange = (event: any) => {
     const newSelectedIds = event.target.value as number[];
