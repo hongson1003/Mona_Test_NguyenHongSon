@@ -24,7 +24,11 @@ const CreateOrder = () => {
   const dispatch = useDispatch();
   const carts = useSelector((state: RootState) => state.cart.items);
   const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
-  const amountReceived = methods.watch("amountReceived");
+  const rawAmountReceived = methods.watch("amountReceived") || "";
+  const amountReceived =
+    typeof rawAmountReceived === "string"
+      ? parseInt(rawAmountReceived.replace(/[^0-9]/g, ""), 10) || 0
+      : rawAmountReceived;
 
   useEffect(() => {
     methods.setValue("cartItems", carts);
@@ -36,7 +40,7 @@ const CreateOrder = () => {
 
   const handleCheckout = methods.handleSubmit(() => {
     const total = calculateTotalPrice(carts);
-    if (total >= amountReceived) {
+    if (total > amountReceived) {
       return toast.error("Số tiền nhận phải lớn hơn hoặc bằng tổng tiền");
     } else if (carts.length === 0) {
       return toast.error("Vui lòng chọn sản phẩm");
@@ -102,7 +106,7 @@ const CreateOrder = () => {
         open={isConfirmModalOpen}
         customerInfo={orderData}
         paymentMethod={orderData.paymentMethod}
-        amountReceived={orderData.amountReceived}
+        amountReceived={amountReceived}
         onClose={handleCloseModal}
         onOk={handleOnOk}
       />

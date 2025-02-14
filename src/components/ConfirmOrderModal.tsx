@@ -10,6 +10,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Stack,
   Typography,
 } from "@mui/material";
 import { useMemo } from "react";
@@ -29,21 +30,14 @@ const ConfirmOrder = ({
   onClose,
   customerInfo,
   paymentMethod,
-  amountReceived,
+  amountReceived = 0,
   cartItems,
   onOk,
 }: IConfirmOrderProps) => {
-  // Tính tổng tiền giỏ hàng
-  const totalAmount = useMemo(
-    () => calculateTotalPrice(cartItems),
-    [cartItems]
-  );
-
-  // Tính tiền thừa (nếu có)
-  const changeAmount = useMemo(
-    () => (amountReceived ?? 0) - totalAmount,
-    [amountReceived, totalAmount]
-  );
+  const { totalAmount, changeAmount } = useMemo(() => {
+    const total = calculateTotalPrice(cartItems);
+    return { totalAmount: total, changeAmount: amountReceived - total };
+  }, [cartItems, amountReceived]);
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
@@ -51,111 +45,116 @@ const ConfirmOrder = ({
         Xác nhận đơn hàng
       </DialogTitle>
       <DialogContent>
-        {/* Thông tin khách hàng */}
         <Card variant="outlined" sx={{ mb: 2 }}>
           <CardContent>
-            <Typography variant="h6" gutterBottom>
-              Thông tin khách hàng
-            </Typography>
-            <Typography variant="body1">👤 {customerInfo.name}</Typography>
-            <Typography variant="body1">📧 {customerInfo.email}</Typography>
-            <Typography variant="body1">📞 {customerInfo.phone}</Typography>
+            <Typography variant="h6">Thông tin khách hàng</Typography>
+            <Typography>👤 {customerInfo.name}</Typography>
+            <Typography>📧 {customerInfo.email}</Typography>
+            <Typography>📞 {customerInfo.phone}</Typography>
           </CardContent>
         </Card>
 
-        {/* Thông tin giỏ hàng */}
         <Card variant="outlined" sx={{ mb: 2 }}>
           <CardContent>
-            <Typography variant="h6" gutterBottom>
-              🛒 Sản phẩm trong giỏ hàng
-            </Typography>
-            {cartItems.map((item: ICartItem) => (
-              <Box
-                key={item.id}
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                sx={{ py: 1 }}
-              >
-                <Typography variant="body1">
-                  {item.product.name} (x{item.quantity})
-                </Typography>
-                <Typography variant="body1">
-                  {formatCurrency(item.product.price * item.quantity)}
-                </Typography>
-              </Box>
-            ))}
+            <Typography variant="h6">🛒 Sản phẩm trong giỏ hàng</Typography>
+            {cartItems.map(({ product, quantity, voucher }) => {
+              const originalPrice = product.price * quantity;
+              let discount = 0;
+              let discountText = "";
+
+              if (voucher) {
+                if (voucher.type === "percent") {
+                  discount = (originalPrice * voucher.value) / 100;
+                  discountText = `${voucher.value}%`;
+                } else {
+                  discount = voucher.value;
+                  discountText = formatCurrency(voucher.value);
+                }
+              }
+
+              return (
+                <Box
+                  key={product.id}
+                  sx={{ py: 1, borderBottom: "1px solid #ddd" }}
+                >
+                  <Typography>
+                    {product.name} (x{quantity})
+                  </Typography>
+                  <Typography color="text.secondary">
+                    Giá gốc: {formatCurrency(originalPrice)}
+                  </Typography>
+                  {voucher && (
+                    <Typography color="error">
+                      Giảm giá: -{formatCurrency(discount)} ({discountText})
+                    </Typography>
+                  )}
+                  <Typography sx={{ fontWeight: "bold", color: "#388e3c" }}>
+                    Thành tiền: {formatCurrency(originalPrice - discount)}
+                  </Typography>
+                </Box>
+              );
+            })}
           </CardContent>
         </Card>
 
-        {/* Thông tin thanh toán */}
         <Card variant="outlined">
           <CardContent>
-            <Typography variant="h6" gutterBottom>
-              💳 Thông tin thanh toán
+            <Typography variant="h6">💳 Thông tin thanh toán</Typography>
+            <Typography>
+              Phương thức: {paymentMethod === "cash" ? "💵 Tiền mặt" : "💳 Thẻ"}
             </Typography>
-            <Typography variant="body1">
-              Phương thức:{" "}
-              <strong>
-                {paymentMethod === "cash" ? "💵 Tiền mặt" : "💳 Thẻ"}
-              </strong>
-            </Typography>
-            <Typography variant="body1">
-              Tổng tiền:{" "}
-              <strong style={{ color: "#d32f2f" }}>
-                {formatCurrency(totalAmount)}
-              </strong>
+            <Typography color="error" fontWeight="bold">
+              Tổng tiền: {formatCurrency(totalAmount)}
             </Typography>
 
-            {paymentMethod === "cash" && amountReceived !== undefined && (
+            {paymentMethod === "cash" && (
               <>
-                <Typography variant="body1">
-                  Số tiền khách đưa:{" "}
-                  <strong style={{ color: "#1976d2" }}>
-                    {formatCurrency(amountReceived)}
-                  </strong>
+                <Typography color="primary">
+                  Số tiền khách đưa: {formatCurrency(amountReceived)}
                 </Typography>
-                {amountReceived > totalAmount ? (
+                {changeAmount !== 0 && (
                   <Typography
-                    variant="body1"
-                    sx={{ color: "#388e3c", fontWeight: "bold" }}
+                    sx={{
+                      fontWeight: "bold",
+                      color: changeAmount > 0 ? "#388e3c" : "#d32f2f",
+                    }}
                   >
-                    Tiền thừa: {formatCurrency(changeAmount)}
+                    {changeAmount > 0 &&
+                      `Tiền thừa: ${formatCurrency(changeAmount)}`}
                   </Typography>
-                ) : amountReceived < totalAmount ? (
-                  <Typography
-                    variant="body1"
-                    sx={{ color: "#d32f2f", fontWeight: "bold" }}
-                  >
-                    Thiếu: {formatCurrency(-changeAmount)}
-                  </Typography>
-                ) : null}
+                )}
               </>
             )}
           </CardContent>
         </Card>
       </DialogContent>
 
-      {/* Hành động */}
       <DialogActions sx={{ p: 2, justifyContent: "center" }}>
-        <Button
-          onClick={onClose}
-          color="error"
-          variant="contained"
-          startIcon={<Cancel />}
-          sx={{ minWidth: 140 }}
-        >
-          Hủy
-        </Button>
-        <Button
-          onClick={onOk}
-          variant="contained"
-          color="primary"
-          startIcon={<CheckCircle />}
-          sx={{ minWidth: 180 }}
-        >
-          Xác nhận thanh toán
-        </Button>
+        <Stack direction="row" spacing={2}>
+          <Button
+            onClick={onClose}
+            color="error"
+            variant="contained"
+            startIcon={<Cancel />}
+            sx={{ minWidth: 130, fontWeight: "bold", textTransform: "none" }}
+          >
+            Hủy
+          </Button>
+          <Button
+            onClick={onOk}
+            variant="contained"
+            color="primary"
+            startIcon={<CheckCircle />}
+            sx={{
+              minWidth: 170,
+              fontWeight: "bold",
+              textTransform: "none",
+              backgroundColor: "#2e7d32",
+            }}
+          >
+            Xác nhận
+          </Button>
+        </Stack>
       </DialogActions>
     </Dialog>
   );
