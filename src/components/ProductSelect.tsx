@@ -25,8 +25,6 @@ const ProductSelect = ({
 }: IProductSelectProps) => {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
-  console.log("🚀 ~ productIdValues:", productIdValues);
-
   useEffect(() => {
     setSelectedIds(productIdValues);
   }, [productIdValues]);
@@ -46,7 +44,6 @@ const ProductSelect = ({
   const handleClearSelection = (event: React.MouseEvent) => {
     event.preventDefault(); // Ngăn Select bị đóng
     event.stopPropagation(); // Ngăn chặn sự kiện onChange của Select
-    console.log("Xóa toàn bộ");
     setSelectedIds([]);
     onChange([]);
   };

@@ -1,4 +1,4 @@
-import { SectionTitle } from "@/components";
+import { ConfirmOrderModal, SectionTitle } from "@/components";
 import { ICartProduct, IOrderForm } from "@/models";
 import { RootState, setCarts } from "@/store";
 import { Box, Container } from "@mui/material";
@@ -41,43 +41,54 @@ const CreateOrder = () => {
   });
 
   return (
-    <Container
-      maxWidth="lg"
-      sx={{
-        py: 3,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      {/* Tiêu đề */}
-      <SectionTitle title="Tạo Đơn Hàng Mới" />
-
-      {/* Nội dung */}
-      <Box
+    <>
+      <Container
+        maxWidth="lg"
         sx={{
+          py: 3,
           display: "flex",
-          flexDirection: { xs: "column", md: "row" },
-          gap: 3,
-          width: "100%",
+          flexDirection: "column",
+          alignItems: "center",
+          height: "100vh",
         }}
       >
-        {/* Form đặt hàng */}
-        <Box sx={{ flex: 1, minWidth: { xs: "100%", md: "400px" } }}>
-          <OrderForm
-            methods={methods}
-            onSelectProducts={handleSelectProducts}
-            productIdValues={carts.map((c) => c.product.id)}
-          />
-        </Box>
+        {/* Tiêu đề */}
+        <SectionTitle title="Tạo Đơn Hàng Mới" />
 
-        {/* Giỏ hàng */}
-        <Box sx={{ flex: 0.8, minWidth: { xs: "100%", md: "300px" } }}>
-          <CartSummary onCheckout={handleCheckout} />
+        {/* Nội dung */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            gap: 3,
+            width: "100%",
+          }}
+        >
+          {/* Form đặt hàng */}
+          <Box sx={{ flex: 1, minWidth: { xs: "100%", md: "400px" } }}>
+            <OrderForm
+              methods={methods}
+              onSelectProducts={handleSelectProducts}
+              productIdValues={carts.map((c) => c.product.id)}
+            />
+          </Box>
+
+          {/* Giỏ hàng */}
+          <Box sx={{ flex: 0.8, minWidth: { xs: "100%", md: "300px" } }}>
+            <CartSummary onCheckout={handleCheckout} />
+          </Box>
         </Box>
-      </Box>
-    </Container>
+      </Container>
+
+      <ConfirmOrderModal
+        cartItems={methods.getValues("cartItems")}
+        open={true}
+        customerInfo={methods.getValues()}
+        paymentMethod={methods.getValues("paymentMethod")}
+        amountReceived={methods.getValues("amountReceived")}
+        onClose={() => {}}
+      />
+    </>
   );
 };
 
