@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { useSelector } from "react-redux";
@@ -17,18 +17,21 @@ const PaymentForm = () => {
   const { control, setValue } = useFormContext();
   const paymentMethod = useWatch({ control, name: "paymentMethod" });
 
-  const cartItems = useSelector((state: RootState) => state.cart.items);
+  // Lấy số tiền khách đưa, đảm bảo chuyển về số
+  const rawAmountReceived =
+    useWatch({ control, name: "amountReceived", defaultValue: 0 }) ?? 0;
+  const amountReceived =
+    typeof rawAmountReceived === "string"
+      ? parseInt(rawAmountReceived.replace(/[^0-9]/g, ""), 10) || 0
+      : rawAmountReceived;
 
-  // Tính tổng tiền giỏ hàng
+  const cartItems = useSelector((state: RootState) => state.cart.items);
   const totalAmount = useMemo(
-    () => calculateTotalPrice(cartItems),
+    () => calculateTotalPrice(cartItems) ?? 0,
     [cartItems]
   );
 
-  // State lưu số tiền nhập vào
-  const [amountReceived, setAmountReceived] = useState(0);
-
-  // Tính số tiền thừa
+  // Tính tiền thừa
   const changeAmount = useMemo(
     () => amountReceived - totalAmount,
     [amountReceived, totalAmount]
@@ -68,18 +71,19 @@ const PaymentForm = () => {
                 allowNegative={false}
                 suffix=" VND"
                 fullWidth
-                value={amountReceived || ""}
+                value={field.value ?? ""}
                 onValueChange={(values) => {
-                  const value = values.floatValue || 0;
-                  setAmountReceived(value);
-                  setValue("amountReceived", value);
+                  const numericValue = values.floatValue ?? 0;
+                  setValue("amountReceived", numericValue, {
+                    shouldValidate: true,
+                  });
                 }}
               />
             )}
           />
 
           {/* Chỉ hiển thị tiền thừa khi số tiền khách đưa > tổng tiền */}
-          {amountReceived > totalAmount && (
+          {changeAmount > 0 && (
             <Typography variant="body1" color="primary" fontWeight="bold">
               Tiền thừa trả khách: {changeAmount.toLocaleString()} VND
             </Typography>

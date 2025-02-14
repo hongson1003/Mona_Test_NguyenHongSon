@@ -41,6 +41,7 @@ const CreateOrder = () => {
 
   const handleOnOk = () => {
     alert("Đã tạo đơn hàng thành công!");
+    console.log(methods.getValues());
 
     dispatch(setCarts([]));
     methods.reset({
