@@ -1,8 +1,19 @@
 import { ICartItem, IVoucher } from "@/models";
+import { formatCurrency } from "@/utils";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { Box, IconButton, MenuItem, Select, Typography } from "@mui/material";
+import { useMemo } from "react";
+
+interface ICartItemProps {
+  item: ICartItem;
+  onRemove: (id: number) => void;
+  onUpdateQuantity: (id: number, quantity: number) => void;
+  vouchers: IVoucher[];
+  onSelectVoucher: (itemId: number, voucherId: string | null) => void;
+  selectedVoucher: string | null;
+}
 
 const CartItem = ({
   item,
@@ -11,14 +22,13 @@ const CartItem = ({
   vouchers,
   onSelectVoucher,
   selectedVoucher,
-}: {
-  item: ICartItem;
-  onRemove: (id: number) => void;
-  onUpdateQuantity: (id: number, quantity: number) => void;
-  vouchers: IVoucher[];
-  onSelectVoucher: (itemId: number, voucherId: string | null) => void;
-  selectedVoucher: string | null;
-}) => {
+}: ICartItemProps) => {
+  // Tính giá đã format (useMemo để tránh re-render không cần thiết)
+  const formattedPrice = useMemo(
+    () => formatCurrency(item.product.price),
+    [item.product.price]
+  );
+
   return (
     <Box
       sx={{
@@ -43,7 +53,7 @@ const CartItem = ({
       <Box sx={{ flex: 1 }}>
         <Typography variant="subtitle1">{item.product.name}</Typography>
         <Typography variant="body2" color="textSecondary">
-          {item.product.price.toLocaleString()} VND
+          {formattedPrice}
         </Typography>
 
         {/* Chọn phiếu giảm giá */}
@@ -64,7 +74,7 @@ const CartItem = ({
             <MenuItem key={voucher.code} value={voucher.code}>
               {voucher.code} - Giảm{" "}
               {voucher.type === "fixed"
-                ? `${voucher.value.toLocaleString()} VND`
+                ? formatCurrency(voucher.value)
                 : `${voucher.value}%`}
             </MenuItem>
           ))}
@@ -73,13 +83,7 @@ const CartItem = ({
         {/* Nút tăng giảm số lượng */}
         <Box sx={{ display: "flex", alignItems: "center", mt: 1, gap: 1.5 }}>
           <IconButton
-            sx={{
-              border: "1px solid #ddd",
-              borderRadius: "8px",
-              padding: "4px",
-              minWidth: 32,
-              minHeight: 32,
-            }}
+            sx={iconButtonStyle}
             size="small"
             onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
             disabled={item.quantity <= 1}
@@ -87,26 +91,10 @@ const CartItem = ({
             <RemoveIcon fontSize="small" />
           </IconButton>
 
-          <Typography
-            sx={{
-              fontSize: "1rem",
-              fontWeight: 500,
-              px: 1.5,
-              textAlign: "center",
-              minWidth: 24,
-            }}
-          >
-            {item.quantity}
-          </Typography>
+          <Typography sx={quantityTextStyle}>{item.quantity}</Typography>
 
           <IconButton
-            sx={{
-              border: "1px solid #ddd",
-              borderRadius: "8px",
-              padding: "4px",
-              minWidth: 32,
-              minHeight: 32,
-            }}
+            sx={iconButtonStyle}
             size="small"
             onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
           >
@@ -116,13 +104,28 @@ const CartItem = ({
       </Box>
 
       {/* Nút xóa sản phẩm */}
-      <Box sx={{ alignSelf: "flex-end" }}>
-        <IconButton color="error" onClick={() => onRemove(item.id)}>
-          <DeleteIcon />
-        </IconButton>
-      </Box>
+      <IconButton color="error" onClick={() => onRemove(item.id)}>
+        <DeleteIcon />
+      </IconButton>
     </Box>
   );
 };
 
 export default CartItem;
+
+// Style tối ưu, tránh lặp code
+const iconButtonStyle = {
+  border: "1px solid #ddd",
+  borderRadius: "8px",
+  padding: "4px",
+  minWidth: 32,
+  minHeight: 32,
+};
+
+const quantityTextStyle = {
+  fontSize: "1rem",
+  fontWeight: 500,
+  px: 1.5,
+  textAlign: "center",
+  minWidth: 24,
+};
